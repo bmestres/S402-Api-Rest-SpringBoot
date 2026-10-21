@@ -1,3 +1,5 @@
 spring:
   application:
     name: fruit-api-h2
+server:
+  port: 9000
