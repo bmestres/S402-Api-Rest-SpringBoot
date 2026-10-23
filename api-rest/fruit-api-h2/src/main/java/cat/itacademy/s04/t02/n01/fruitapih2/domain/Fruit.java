@@ -4,15 +4,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Fruit {
     @Id
     @GeneratedValue
     Long id;
-
     String name;
-
-    @JsonProperty("weight_in_kilos")
     int weightInKilos;
+
+    public Fruit(String name, int weightInKilos) {
+        this.name = name;
+        this.weightInKilos = weightInKilos;
+    }
 }
