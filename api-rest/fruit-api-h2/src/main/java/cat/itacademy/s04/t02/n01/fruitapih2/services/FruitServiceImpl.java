@@ -26,8 +26,6 @@ public class FruitServiceImpl implements FruitService {
     @Transactional
     public FruitResponse createFruit(FruitRequest request) {
 
-        checkInputData(request);
-
         Fruit newFruit = new Fruit(request.name(), request.weightInKilos());
         Fruit savedFruit = fruitRepository.save(newFruit);
 
@@ -47,18 +45,6 @@ public class FruitServiceImpl implements FruitService {
     @Override
     public void deleteFruit(Long id) {
 
-    }
-
-    private static void checkInputData(FruitRequest request) {
-        if(request == null) {
-            throw new IllegalArgumentException("Request must not be NULL");
-        }
-        if(request.name() == null) {
-            throw new IllegalArgumentException("Name must not be NULL");
-        }
-        if(request.name().trim().isBlank()) {
-            throw new IllegalArgumentException("Name must not be empty");
-        }
     }
 
     private FruitResponse buildDtoFromFruit(Fruit fruit) {
