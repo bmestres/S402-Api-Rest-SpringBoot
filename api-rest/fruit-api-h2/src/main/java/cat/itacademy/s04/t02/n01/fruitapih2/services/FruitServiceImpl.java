@@ -3,11 +3,15 @@ package cat.itacademy.s04.t02.n01.fruitapih2.services;
 import cat.itacademy.s04.t02.n01.fruitapih2.domain.Fruit;
 import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitResponseDto;
+import cat.itacademy.s04.t02.n01.fruitapih2.exception.FruitNotFoundException;
 import cat.itacademy.s04.t02.n01.fruitapih2.repositories.FruitRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,8 +39,32 @@ public class FruitServiceImpl implements FruitService {
     }
 
     @Override
+    @Transactional
     public FruitResponseDto updateFruit(Long id, FruitRequestDto request) {
-        return null;
+        if(request == null) {
+            throw new IllegalArgumentException("Request must not be NULL");
+        }
+        if(id < 0) {
+            throw new IllegalArgumentException("ID must not be NULL");
+        }
+
+        Optional<Fruit> foundFruit = fruitRepository.findById(id);
+
+        if(foundFruit.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    String.format("Fruit with id %d not found", id)
+            );
+        }
+
+        Fruit fruit = foundFruit.get();
+
+        fruit.setName(request.name());
+        fruit.setWeightInKilos(request.weightInKilos());
+
+        Fruit savedFruit = fruitRepository.save(fruit);
+
+        return buildDtoFromFruit(savedFruit);
     }
 
     @Override
