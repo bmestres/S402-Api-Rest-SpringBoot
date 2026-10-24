@@ -16,13 +16,18 @@ public class FruitServiceImpl implements FruitService {
     private final FruitRepository fruitRepository;
 
     public FruitServiceImpl(FruitRepository fruitRepository) {
+        if(fruitRepository == null) {
+            throw new IllegalArgumentException("Repository must not be NULL");
+        }
         this.fruitRepository = fruitRepository;
     }
 
     @Override
     @Transactional
     public FruitResponseDto createFruit(FruitRequestDto request) {
-
+        if(request == null) {
+            throw new IllegalArgumentException("Request must not be NULL");
+        }
         Fruit newFruit = new Fruit(request.name(), request.weightInKilos());
         Fruit savedFruit = fruitRepository.save(newFruit);
 
