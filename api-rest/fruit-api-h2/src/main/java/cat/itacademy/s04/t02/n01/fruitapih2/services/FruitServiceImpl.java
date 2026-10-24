@@ -35,6 +35,11 @@ public class FruitServiceImpl implements FruitService {
     }
 
     @Override
+    public FruitResponseDto updateFruit(Long id, FruitRequestDto request) {
+        return null;
+    }
+
+    @Override
     public List<Fruit> getAllFruits() {
         return List.of();
     }
