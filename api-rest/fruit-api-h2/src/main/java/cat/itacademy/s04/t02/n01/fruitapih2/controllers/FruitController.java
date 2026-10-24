@@ -1,8 +1,8 @@
 package cat.itacademy.s04.t02.n01.fruitapih2.controllers;
 
 
-import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitRequest;
-import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitResponse;
+import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitRequestDto;
+import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapih2.services.FruitService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,8 +20,8 @@ public class FruitController {
     }
 
     @PostMapping
-    public ResponseEntity<FruitResponse> createFruit(@Valid @RequestBody FruitRequest request) {
-        FruitResponse createdFruit = fruitService.createFruit(request);
+    public ResponseEntity<FruitResponseDto> createFruit(@Valid @RequestBody FruitRequestDto request) {
+        FruitResponseDto createdFruit = fruitService.createFruit(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdFruit);
     }

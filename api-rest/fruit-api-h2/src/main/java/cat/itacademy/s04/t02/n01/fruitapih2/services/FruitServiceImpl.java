@@ -1,8 +1,8 @@
 package cat.itacademy.s04.t02.n01.fruitapih2.services;
 
 import cat.itacademy.s04.t02.n01.fruitapih2.domain.Fruit;
-import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitRequest;
-import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitResponse;
+import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitRequestDto;
+import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapih2.repositories.FruitRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,10 @@ public class FruitServiceImpl implements FruitService {
 
     @Override
     @Transactional
-    public FruitResponse createFruit(FruitRequest request) {
-
+    public FruitResponseDto createFruit(FruitRequestDto request) {
+        if(request == null) {
+            throw new IllegalArgumentException("Request must not be NULL");
+        }
         Fruit newFruit = new Fruit(request.name(), request.weightInKilos());
         Fruit savedFruit = fruitRepository.save(newFruit);
 
@@ -47,8 +49,8 @@ public class FruitServiceImpl implements FruitService {
 
     }
 
-    private FruitResponse buildDtoFromFruit(Fruit fruit) {
-        return new FruitResponse(
+    private FruitResponseDto buildDtoFromFruit(Fruit fruit) {
+        return new FruitResponseDto(
                 fruit.getId(),
                 fruit.getName(),
                 fruit.getWeightInKilos());
