@@ -32,6 +32,7 @@ public class FruitServiceImpl implements FruitService {
         if(request == null) {
             throw new IllegalArgumentException("Request must not be NULL");
         }
+
         Fruit newFruit = new Fruit(request.name(), request.weightInKilos());
         Fruit savedFruit = fruitRepository.save(newFruit);
 
@@ -44,20 +45,14 @@ public class FruitServiceImpl implements FruitService {
         if(request == null) {
             throw new IllegalArgumentException("Request must not be NULL");
         }
-        if(id < 0) {
-            throw new IllegalArgumentException("ID must not be NULL");
+
+        Optional<Fruit> allegedFruit = fruitRepository.findById(id);
+
+        if(allegedFruit.isEmpty()) {
+            throw new FruitNotFoundException(String.format("Fruit with id %d not found", id));
         }
 
-        Optional<Fruit> foundFruit = fruitRepository.findById(id);
-
-        if(foundFruit.isEmpty()) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    String.format("Fruit with id %d not found", id)
-            );
-        }
-
-        Fruit fruit = foundFruit.get();
+        Fruit fruit = allegedFruit.get();
 
         fruit.setName(request.name());
         fruit.setWeightInKilos(request.weightInKilos());
