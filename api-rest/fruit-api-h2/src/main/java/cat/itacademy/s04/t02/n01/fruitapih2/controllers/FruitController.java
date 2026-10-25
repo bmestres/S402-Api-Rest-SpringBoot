@@ -36,4 +36,9 @@ public class FruitController {
     public ResponseEntity<List<FruitResponseDto>> listAll() {
         return ResponseEntity.status(HttpStatus.OK).body(fruitService.getAllFruits());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FruitResponseDto> getFruitById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(fruitService.findById(id));
+    }
 }

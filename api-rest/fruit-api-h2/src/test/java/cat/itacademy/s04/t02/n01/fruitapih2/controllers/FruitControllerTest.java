@@ -170,4 +170,8 @@ class FruitControllerTest {
                 .andExpect(jsonPath("$[1].name").value(fruit2.name()))
                 .andExpect(jsonPath("$[1].weight_in_kilos").value(fruit2.weightInKilos()));
     }
+
+    /*@Test
+    @DisplayName("GET /fruits/{id} with existing ID should return expected HTTP 200 OK with details of the fruit")
+    void */
 }
