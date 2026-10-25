@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/fruits")
 public class FruitController {
@@ -21,15 +23,17 @@ public class FruitController {
 
     @PostMapping
     public ResponseEntity<FruitResponseDto> createFruit(@Valid @RequestBody FruitRequestDto request) {
-        FruitResponseDto createdFruit = fruitService.createFruit(request);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdFruit);
+        return ResponseEntity.status(HttpStatus.CREATED).body(fruitService.createFruit(request));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<FruitResponseDto> updateFruit(@PathVariable Long id, @Valid @RequestBody FruitRequestDto request) {
-        FruitResponseDto updatedFruit = fruitService.updateFruit(id, request);
+        return ResponseEntity.status(HttpStatus.OK).body(fruitService.updateFruit(id, request));
 
-        return ResponseEntity.ok(updatedFruit);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FruitResponseDto>> listAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(fruitService.getAllFruits());
     }
 }
