@@ -60,6 +60,7 @@ public class FruitServiceImpl implements FruitService {
     }
 
     @Override
+    @Transactional
     public List<FruitResponseDto> getAllFruits() {
 
         List<Fruit> fruits = fruitRepository.findAll();
@@ -70,10 +71,12 @@ public class FruitServiceImpl implements FruitService {
     }
 
     @Override
+    @Transactional
     public FruitResponseDto findById(Long id) {
         if(id == null) {
             throw new IllegalArgumentException("ID must not be NULL");
         }
+
         Optional<Fruit> allegedFruit = fruitRepository.findById(id);
 
         if(allegedFruit.isEmpty()) {
@@ -83,8 +86,17 @@ public class FruitServiceImpl implements FruitService {
     }
 
     @Override
-    public void deleteFruit(Long id) {
+    @Transactional
+    public void deleteFruitById(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException("ID must not be NULL");
+        }
+        Optional<Fruit> allegedFruit = fruitRepository.findById(id);
 
+        if(allegedFruit.isEmpty()) {
+            throw new FruitNotFoundException(String.format("Fruit with ID %d not found", id));
+        }
+        fruitRepository.deleteById(id);
     }
 
     private static FruitResponseDto buildDtoFromFruit(Fruit fruit) {
