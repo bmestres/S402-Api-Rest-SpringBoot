@@ -171,7 +171,19 @@ class FruitControllerTest {
                 .andExpect(jsonPath("$[1].weight_in_kilos").value(fruit2.weightInKilos()));
     }
 
-    /*@Test
+    @Test
     @DisplayName("GET /fruits/{id} with existing ID should return expected HTTP 200 OK with details of the fruit")
-    void */
+    void getFruitById_withExistingIdShouldReturnExpectedStatusWithFruitDetails() throws Exception {
+
+        FruitResponseDto expectedReturn = new FruitResponseDto(1L, "Prune", 2);
+
+        when(fruitService.findById(1L)).thenReturn(expectedReturn);
+
+        mockMvc.perform(get("/fruits/{id}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.name").value("Prune"))
+                .andExpect(jsonPath("$.weight_in_kilos").value(2));
+    }
 }
