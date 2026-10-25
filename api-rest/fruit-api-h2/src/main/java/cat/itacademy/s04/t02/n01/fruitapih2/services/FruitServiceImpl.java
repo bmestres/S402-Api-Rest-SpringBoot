@@ -70,8 +70,16 @@ public class FruitServiceImpl implements FruitService {
     }
 
     @Override
-    public Fruit findById(Long id) {
-        return null;
+    public FruitResponseDto findById(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException("ID must not be NULL");
+        }
+        Optional<Fruit> allegedFruit = fruitRepository.findById(id);
+
+        if(allegedFruit.isEmpty()) {
+            throw new FruitNotFoundException(String.format("Fruit with ID %d not found", id));
+        }
+        return buildDtoFromFruit(allegedFruit.get());
     }
 
     @Override

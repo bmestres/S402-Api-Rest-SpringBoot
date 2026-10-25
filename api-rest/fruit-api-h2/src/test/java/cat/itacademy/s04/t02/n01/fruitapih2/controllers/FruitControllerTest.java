@@ -1,5 +1,6 @@
 package cat.itacademy.s04.t02.n01.fruitapih2.controllers;
 
+import cat.itacademy.s04.t02.n01.fruitapih2.domain.Fruit;
 import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapih2.exception.FruitNotFoundException;
@@ -13,7 +14,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.List;
 import java.util.Random;
+
+
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -21,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(FruitController.class)
@@ -129,5 +134,40 @@ class FruitControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonPayload))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("GET /fruits with empty repository should return empty array with HTTP 200 OK status")
+    void listAll_shouldReturnExpectedHttpStatusWithEmptyArrayIfNoElementsInRepository() throws Exception {
+
+        mockMvc.perform(get("/fruits"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    @DisplayName("GET /fruits should return expected json array with HTTP OK status")
+    void listAll_shouldReturnExpectedHttpStatusWithExpectedJsonArray() throws Exception {
+
+        FruitResponseDto fruit1 = new FruitResponseDto(1L,"Tangerine", 2);
+        FruitResponseDto fruit2 = new FruitResponseDto(2L,"Blueberry", 1);
+
+        when(fruitService
+                .getAllFruits())
+                .thenReturn(List.of(
+                fruit1,
+                fruit2));
+
+        mockMvc.perform(get("/fruits"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].name").value(fruit1.name()))
+                .andExpect(jsonPath("$[0].weight_in_kilos").value(fruit1.weightInKilos()))
+                .andExpect(jsonPath("$[1].id").value(fruit2.id()))
+                .andExpect(jsonPath("$[1].name").value(fruit2.name()))
+                .andExpect(jsonPath("$[1].weight_in_kilos").value(fruit2.weightInKilos()));
     }
 }

@@ -10,6 +10,6 @@ public interface FruitService {
     FruitResponseDto createFruit(FruitRequestDto request);
     FruitResponseDto updateFruit(Long id, FruitRequestDto request);
     List<FruitResponseDto> getAllFruits();
-    Fruit findById(Long id);
+    FruitResponseDto findById(Long id);
     void deleteFruit(Long id);
 }

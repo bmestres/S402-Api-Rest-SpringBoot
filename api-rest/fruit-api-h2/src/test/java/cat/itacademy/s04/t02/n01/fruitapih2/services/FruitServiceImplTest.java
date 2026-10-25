@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -75,7 +76,25 @@ class FruitServiceImplTest {
     }
 
     @Test
-    void getAllFruits() {
+    @DisplayName("Get All Fruits should return expected DTO for each fruit in the repository")
+    void getAllFruits_ShouldReturnExpectedDtoForEachFruitInRepository() {
+        Fruit fruit1 = new Fruit("Peer", 2);
+        Fruit fruit2 = new Fruit("Watermelon", 5);
+
+        fruit1.setId(1L);
+        fruit2.setId(2L);
+
+        when(fruitRepository.findAll()).thenReturn(List.of(fruit1, fruit2));
+
+        List<FruitResponseDto> result = fruitService.getAllFruits();
+
+        assertEquals(1L, result.getFirst().id());
+        assertEquals("Peer", result.getFirst().name());
+        assertEquals(2, result.getFirst().weightInKilos());
+
+        assertEquals(2L, result.get(1).id());
+        assertEquals("Watermelon", result.get(1).name());
+        assertEquals(5, result.get(1).weightInKilos());
     }
 
     @Test
