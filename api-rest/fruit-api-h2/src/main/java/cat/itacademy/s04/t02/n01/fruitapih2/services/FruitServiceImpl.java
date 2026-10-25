@@ -57,9 +57,7 @@ public class FruitServiceImpl implements FruitService {
         fruit.setName(request.name());
         fruit.setWeightInKilos(request.weightInKilos());
 
-        Fruit savedFruit = fruitRepository.save(fruit);
-
-        return buildDtoFromFruit(savedFruit);
+        return buildDtoFromFruit(fruitRepository.save(fruit));
     }
 
     @Override

@@ -14,11 +14,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -60,5 +62,35 @@ public class FruitIntegrationTest {
         assertNotNull(savedFruit.getId());
         assertEquals("Strawberry", savedFruit.getName());
         assertEquals(1, savedFruit.getWeightInKilos());
+    }
+
+    @Test
+    @DisplayName("PUT /fruits should modify given fruit in the database and return expected HTTP response")
+    void updateFruit_shouldModifyFruitInDatabaseAndReturnExpectedResponse() throws Exception {
+
+        Fruit initialFruit = fruitRepository.save(new Fruit("Apple", 2));
+        Long id = initialFruit.getId();
+
+        FruitRequestDto testUpdateRequest = new FruitRequestDto("Banana", 1);
+        String jsonPayload = objectMapper.writeValueAsString(testUpdateRequest);
+
+        mockMvc.perform(put("/fruits/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonPayload))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value("Banana"))
+                .andExpect(jsonPath("$.weight_in_kilos").value(1));
+
+        Optional<Fruit> allegedFruitFromH2 = fruitRepository.findById(id);
+
+        if(allegedFruitFromH2.isEmpty()) {
+            throw new Exception("Error");
+        }
+
+        Fruit fruitFromH2 = allegedFruitFromH2.get();
+
+        assertEquals("Banana", fruitFromH2.getName());
+        assertEquals(1, fruitFromH2.getWeightInKilos());
     }
 }

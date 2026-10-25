@@ -32,6 +32,4 @@ public class FruitController {
 
         return ResponseEntity.ok(updatedFruit);
     }
-
-
 }

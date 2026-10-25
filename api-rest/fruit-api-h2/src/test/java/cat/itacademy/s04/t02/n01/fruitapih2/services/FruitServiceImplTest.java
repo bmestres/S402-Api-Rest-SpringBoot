@@ -11,6 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -29,13 +32,13 @@ class FruitServiceImplTest {
     @DisplayName("createFruit should save fruit instance and return expected DTO response")
     void createFruit_shouldSaveInstanceAndReturnExpectedDto() {
 
-        FruitRequestDto testRequest = new FruitRequestDto("Orange", 3);
-        Fruit savedFruit = new Fruit(testRequest.name(), testRequest.weightInKilos());
+        FruitRequestDto testCreateRequest = new FruitRequestDto("Orange", 3);
+        Fruit savedFruit = new Fruit(testCreateRequest.name(), testCreateRequest.weightInKilos());
         savedFruit.setId(1L);
 
         when(fruitRepository.save(any(Fruit.class))).thenReturn(savedFruit);
 
-        FruitResponseDto result = fruitService.createFruit(testRequest);
+        FruitResponseDto result = fruitService.createFruit(testCreateRequest);
 
         assertNotNull(result);
         assertEquals(1L, result.id());
@@ -45,7 +48,30 @@ class FruitServiceImplTest {
     }
 
     @Test
-    void updateFruit() {
+    @DisplayName("Update fruit should modify existing food instance and return expected DTO response")
+    void updateFruit_shouldModifyExistingInstanceAndReturnExpectedDto() {
+
+        Fruit existingFruit = new Fruit("Mango", 1);
+        Long id = new Random().nextLong();
+        existingFruit.setId(id);
+
+        FruitRequestDto testUpdateRequest = new FruitRequestDto("Banana", 2);
+
+        when(fruitRepository
+                .findById(id))
+                .thenReturn(Optional.of(existingFruit));
+
+        when(fruitRepository
+                .save(any(Fruit.class)))
+                .thenReturn(existingFruit);
+
+
+        FruitResponseDto result = fruitService.updateFruit(id, testUpdateRequest);
+
+        assertNotNull(result);
+        assertEquals(id, result.id());
+        assertEquals("Banana", result.name());
+        assertEquals(2, result.weightInKilos());
     }
 
     @Test
