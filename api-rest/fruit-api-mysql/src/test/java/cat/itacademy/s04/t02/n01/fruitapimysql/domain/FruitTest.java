@@ -11,7 +11,7 @@ class FruitTest {
         Fruit testFruit = new Fruit("Fruit", 2);
 
         assertEquals("Fruit", testFruit.getName());
-        assertEquals(2, testFruit.weightInKilos);
+        assertEquals(2, testFruit.getWeightInKilos());
     }
 
     @Test
