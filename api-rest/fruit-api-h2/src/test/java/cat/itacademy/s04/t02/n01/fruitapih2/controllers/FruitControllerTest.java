@@ -1,6 +1,5 @@
 package cat.itacademy.s04.t02.n01.fruitapih2.controllers;
 
-import cat.itacademy.s04.t02.n01.fruitapih2.domain.Fruit;
 import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapih2.exception.FruitNotFoundException;

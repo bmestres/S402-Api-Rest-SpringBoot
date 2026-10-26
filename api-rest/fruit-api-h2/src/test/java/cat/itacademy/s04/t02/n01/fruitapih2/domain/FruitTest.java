@@ -23,5 +23,4 @@ class FruitTest {
     void constructor_withNegativeWeightValueReturnsException() {
         assertThrows((IllegalArgumentException.class), () -> new Fruit("Fruit", -2));
     }
-
 }

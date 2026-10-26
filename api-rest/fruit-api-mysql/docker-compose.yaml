@@ -1,0 +1,26 @@
+services:
+    # MYSQL DATABASE
+    fruit-api-mysql-database:
+        image: mysql:8.4
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_ROOT_HOST: '%'
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql-data:/var/lib/mysql
+        
+    # JAVA APP
+    fruit-api:
+        build: .
+        ports:
+            - "9000:9000"
+        environment:
+
+            SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_DATABASE}:3306/${MYSQL_DATABASE}
+            SPRING_DATASOURCE_USERNAME: root
+            SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            SPRING_JPA_HIBERNATE_DDL_AUTO: update
+volumes:
+    mysql-data:
