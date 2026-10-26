@@ -14,10 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +31,7 @@ class FruitServiceImplTest {
 
 
     @Test
-    @DisplayName("createFruit should save fruit instance and return expected DTO response")
+    @DisplayName("CreateFruit should call save Repository method and return expected DTO response")
     void createFruit_shouldSaveInstanceAndReturnExpectedDto() {
 
         FruitRequestDto testCreateRequest = new FruitRequestDto("Orange", 3);
@@ -50,11 +50,11 @@ class FruitServiceImplTest {
     }
 
     @Test
-    @DisplayName("Update fruit should modify existing food instance and return expected DTO response")
-    void updateFruit_shouldModifyExistingInstanceAndReturnExpectedDto() {
+    @DisplayName("Update fruit should call expected Repository methods and return expected DTO response")
+    void updateFruit_shouldCallExpectedRepositoryMethodsAndReturnExpectedDto() {
 
         Fruit existingFruit = new Fruit("Mango", 1);
-        Long id = new Random().nextLong();
+        Long id = 1L;
         existingFruit.setId(id);
 
         FruitRequestDto testUpdateRequest = new FruitRequestDto("Banana", 2);
@@ -77,7 +77,7 @@ class FruitServiceImplTest {
     }
 
     @Test
-    @DisplayName("Get All Fruits should return expected DTO for each fruit in the repository")
+    @DisplayName("Get All Fruits in Fruit Service should return expected DTOs for each fruit in the repository")
     void getAllFruits_ShouldReturnExpectedDtoForEachFruitInRepository() {
         Fruit fruit1 = new Fruit("Peer", 2);
         Fruit fruit2 = new Fruit("Watermelon", 5);
@@ -130,6 +130,30 @@ class FruitServiceImplTest {
     }
 
     @Test
-    void deleteFruitById() {
+    @DisplayName("Delete fruit should call expected repository methods if ID exists")
+    void deleteFruitById_shouldCallExpectedRepositoryMethodsIfIdExists() {
+
+        Fruit existingFruit = new Fruit("Prune", 1);
+        existingFruit.setId(1L);
+
+        when(fruitRepository
+                .findById(1L))
+                .thenReturn(Optional.of(existingFruit));
+
+        fruitService.deleteFruitById(1L);
+
+        verify(fruitRepository).deleteById(1L);
     }
+
+    @Test
+    @DisplayName("Delete fruit with non-existing ID should throw Fruit Not Found Exception")
+    void deleteFruitById_withNonExistingIdShouldThrowExpectedException() {
+
+        Long nonExistingId = 71L;
+
+        when(fruitRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+
+        assertThrows(FruitNotFoundException.class, ()-> fruitService.deleteFruitById(nonExistingId));
+    }
+
 }

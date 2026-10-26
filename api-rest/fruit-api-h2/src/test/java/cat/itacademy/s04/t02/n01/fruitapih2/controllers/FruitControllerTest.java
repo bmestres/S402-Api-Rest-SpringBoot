@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,12 +20,11 @@ import java.util.Random;
 
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(FruitController.class)
@@ -199,6 +197,37 @@ class FruitControllerTest {
                 .thenThrow(new FruitNotFoundException(message));
 
         mockMvc.perform(get("/fruits/{id}", nonExistingId))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorMessage").value(message));
+    }
+
+    @Test
+    @DisplayName("DELETE /fruits/{id} with existing ID should return HTTP 204 NO CONTENT")
+    void deleteFruitById_withExistingIdShouldReturnExpectedHttpResponse() throws Exception {
+
+        Long existingId = 1L;
+
+        FruitResponseDto expectedReturn = new FruitResponseDto(existingId, "Fruit", 1);
+
+        when(fruitService.findById(existingId)).thenReturn(expectedReturn);
+
+        mockMvc.perform(delete("/fruits/{id}", existingId))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("DELETE /fruits/{id} with non-existing ID should return HTTP 404 NOT FOUND with Error Message")
+    void deleteFruitById_withNonExistingIdShouldReturnExpectedHttpResponseWithMessage() throws Exception {
+
+        Long nonExistingId = 44L;
+        String message = String.format("Fruit with ID %d not found", nonExistingId);
+
+        doThrow(new FruitNotFoundException(message))
+                .when(fruitService)
+                .deleteFruitById(nonExistingId);
+
+        mockMvc.perform(delete("/fruits/{id}", nonExistingId))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorMessage").value(message));

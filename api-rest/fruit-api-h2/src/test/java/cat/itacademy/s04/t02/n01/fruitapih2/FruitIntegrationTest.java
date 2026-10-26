@@ -16,11 +16,8 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -65,7 +62,7 @@ public class FruitIntegrationTest {
     }
 
     @Test
-    @DisplayName("PUT /fruits should modify given fruit in the database and return expected HTTP response")
+    @DisplayName("PUT /fruits should modify fruit in the database and return expected HTTP response")
     void updateFruit_shouldModifyFruitInDatabaseAndReturnExpectedResponse() throws Exception {
 
         Fruit initialFruit = fruitRepository.save(new Fruit("Apple", 2));
@@ -92,5 +89,18 @@ public class FruitIntegrationTest {
 
         assertEquals("Banana", fruitFromH2.getName());
         assertEquals(1, fruitFromH2.getWeightInKilos());
+    }
+
+    @Test
+    @DisplayName("DELETE /fruits/{id} should eliminate the fruit in the database and return expected HTTP response")
+    void deleteFruit_shouldEliminateFruitAndReturnExpectedHttpResponse() throws Exception {
+
+        Fruit existingFruit = fruitRepository.save(new Fruit("Lime", 2));
+        Long fruitId = existingFruit.getId();
+
+        mockMvc.perform(delete("/fruits/{id}", fruitId))
+                .andExpect(status().isNoContent());
+
+        assertFalse(fruitRepository.existsById(fruitId));
     }
 }
