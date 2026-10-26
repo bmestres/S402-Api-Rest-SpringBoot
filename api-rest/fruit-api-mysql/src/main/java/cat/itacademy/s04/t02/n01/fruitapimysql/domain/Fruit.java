@@ -1,28 +1,35 @@
 package cat.itacademy.s04.t02.n01.fruitapimysql.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
+@Table(name = "fruits")
 public class Fruit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String name;
-    int weightInKilos;
+    private Long id;
 
-    public Fruit(String name, int weightInKilos) {
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "weight_in_kilos")
+    private int weightInKilos;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id", nullable = false)
+    private Supplier supplier;
+
+    public Fruit(String name, int weightInKilos, Supplier supplier) {
 
         checkInputData(name, weightInKilos);
 
         this.name = name;
         this.weightInKilos = weightInKilos;
+        this.supplier = supplier;
     }
 
     private static void checkInputData(String name, int weightInKilos) {
