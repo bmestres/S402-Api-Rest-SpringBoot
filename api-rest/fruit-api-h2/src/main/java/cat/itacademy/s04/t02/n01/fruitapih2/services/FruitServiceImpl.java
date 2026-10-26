@@ -6,12 +6,12 @@ import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapih2.exception.FruitNotFoundException;
 import cat.itacademy.s04.t02.n01.fruitapih2.repositories.FruitRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,10 +33,9 @@ public class FruitServiceImpl implements FruitService {
             throw new IllegalArgumentException("Request must not be NULL");
         }
 
-        Fruit newFruit = new Fruit(request.name(), request.weightInKilos());
-        Fruit savedFruit = fruitRepository.save(newFruit);
+        Fruit newFruit = buildFruitFromDto(request);
 
-        return buildDtoFromFruit(savedFruit);
+        return buildDtoFromFruit(fruitRepository.save(newFruit));
     }
 
     @Override
@@ -52,33 +51,65 @@ public class FruitServiceImpl implements FruitService {
             throw new FruitNotFoundException(String.format("Fruit with id %d not found", id));
         }
 
-        Fruit fruit = allegedFruit.get();
+        Fruit existingFruit = allegedFruit.get();
 
-        fruit.setName(request.name());
-        fruit.setWeightInKilos(request.weightInKilos());
+        existingFruit.setName(request.name());
+        existingFruit.setWeightInKilos(request.weightInKilos());
 
-        return buildDtoFromFruit(fruitRepository.save(fruit));
+        return buildDtoFromFruit(fruitRepository.save(existingFruit));
     }
 
     @Override
-    public List<Fruit> getAllFruits() {
-        return List.of();
+    @Transactional
+    public List<FruitResponseDto> getAllFruits() {
+
+        List<Fruit> fruits = fruitRepository.findAll();
+
+        return fruits.stream()
+                        .map(fruit -> buildDtoFromFruit(fruit))
+                        .collect(Collectors.toList());
     }
 
     @Override
-    public Fruit findById(Long id) {
-        return null;
+    @Transactional
+    public FruitResponseDto findById(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException("ID must not be NULL");
+        }
+
+        Optional<Fruit> allegedFruit = fruitRepository.findById(id);
+
+        if(allegedFruit.isEmpty()) {
+            throw new FruitNotFoundException(String.format("Fruit with ID %d not found", id));
+        }
+        return buildDtoFromFruit(allegedFruit.get());
     }
 
     @Override
-    public void deleteFruit(Long id) {
+    @Transactional
+    public void deleteFruitById(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException("ID must not be NULL");
+        }
+        Optional<Fruit> allegedFruit = fruitRepository.findById(id);
 
+        if(allegedFruit.isEmpty()) {
+            throw new FruitNotFoundException(String.format("Fruit with ID %d not found", id));
+        }
+        fruitRepository.deleteById(id);
     }
 
-    private FruitResponseDto buildDtoFromFruit(Fruit fruit) {
+    private static FruitResponseDto buildDtoFromFruit(Fruit fruit) {
         return new FruitResponseDto(
                 fruit.getId(),
                 fruit.getName(),
                 fruit.getWeightInKilos());
+    }
+
+    private static Fruit buildFruitFromDto(FruitRequestDto request) {
+        return new Fruit(
+                request.name(),
+                request.weightInKilos()
+        );
     }
 }
