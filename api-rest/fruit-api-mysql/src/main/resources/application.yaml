@@ -1,5 +1,5 @@
 spring:
   application:
-    name: fruit-api-h2
+    name: fruit-api-mysql
 server:
   port: 9000

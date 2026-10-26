@@ -1,10 +1,13 @@
 package cat.itacademy.s04.t02.n01.fruitapimysql.services;
 
 import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Fruit;
+import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Supplier;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.exception.FruitNotFoundException;
+import cat.itacademy.s04.t02.n01.fruitapimysql.exception.SupplierNotFoundException;
 import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.FruitRepository;
+import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.SupplierRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +21,14 @@ import java.util.stream.Collectors;
 public class FruitServiceImpl implements FruitService {
 
     private final FruitRepository fruitRepository;
+    private final SupplierRepository supplierRepository;
 
-    public FruitServiceImpl(FruitRepository fruitRepository) {
-        if(fruitRepository == null) {
-            throw new IllegalArgumentException("Repository must not be NULL");
-        }
+    public FruitServiceImpl(FruitRepository fruitRepository, SupplierRepository supplierRepository) {
+
+        checkInputData(fruitRepository, supplierRepository);
+
         this.fruitRepository = fruitRepository;
+        this.supplierRepository = supplierRepository;
     }
 
     @Override
@@ -99,17 +104,37 @@ public class FruitServiceImpl implements FruitService {
         fruitRepository.deleteById(id);
     }
 
-    private static FruitResponseDto buildDtoFromFruit(Fruit fruit) {
+    private static void checkInputData(FruitRepository fruitRepository, SupplierRepository supplierRepository) {
+        if(fruitRepository == null) {
+            throw new IllegalArgumentException("Fruit Repository must not be NULL");
+        }
+
+        if(supplierRepository == null) {
+            throw new IllegalArgumentException("Supplier Repository must not be NULL");
+        }
+    }
+
+    private Supplier findSupplierById(Long supplierId) {
+        Optional<Supplier> allegedSupplier = supplierRepository.findById(supplierId);
+
+        if(allegedSupplier.isEmpty()) {
+            throw new SupplierNotFoundException(String.format("Supplier with id %d not found", supplierId));
+        }
+        return allegedSupplier.get();
+    }
+
+    private FruitResponseDto buildDtoFromFruit(Fruit fruit) {
         return new FruitResponseDto(
                 fruit.getId(),
                 fruit.getName(),
                 fruit.getWeightInKilos());
     }
 
-    private static Fruit buildFruitFromDto(FruitRequestDto request) {
+   private Fruit buildFruitFromDto(FruitRequestDto request) {
         return new Fruit(
                 request.name(),
-                request.weightInKilos()
+                request.weightInKilos(),
+                findSupplierById(request.supplierID())
         );
     }
 }

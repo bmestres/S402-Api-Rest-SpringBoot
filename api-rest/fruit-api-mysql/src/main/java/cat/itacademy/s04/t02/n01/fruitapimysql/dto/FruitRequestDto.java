@@ -9,7 +9,11 @@ public record FruitRequestDto(
         @NotNull(message = "Name must not be NULL")
         @NotBlank(message = "Name must not be empty")
         String name,
+
         @Positive(message = "Weight must be greater than 0")
         @JsonProperty("weight_in_kilos")
-        int weightInKilos
+        int weightInKilos,
+
+        @NotNull(message = "Supplier ID must not be NULL")
+        Long supplierID
 ) { }

@@ -17,7 +17,6 @@ services:
         ports:
             - "9000:9000"
         environment:
-
             SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_DATABASE}:3306/${MYSQL_DATABASE}
             SPRING_DATASOURCE_USERNAME: root
             SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}

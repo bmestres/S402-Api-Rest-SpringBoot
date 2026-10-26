@@ -25,14 +25,14 @@ public class Fruit {
 
     public Fruit(String name, int weightInKilos, Supplier supplier) {
 
-        checkInputData(name, weightInKilos);
+        checkInputData(name, weightInKilos, supplier);
 
         this.name = name;
         this.weightInKilos = weightInKilos;
         this.supplier = supplier;
     }
 
-    private static void checkInputData(String name, int weightInKilos) {
+    private static void checkInputData(String name, int weightInKilos, Supplier supplier) {
         if(name == null) {
             throw new IllegalArgumentException("Name must not be NULL");
         }
@@ -41,8 +41,11 @@ public class Fruit {
             throw new IllegalArgumentException("Name must not be empty");
         }
 
-        if(weightInKilos < 0) {
+        if(weightInKilos <= 0) {
             throw new IllegalArgumentException("Weight must be greater than 0");
+        }
+        if(supplier == null) {
+            throw new IllegalArgumentException("Supplier must not be NULL");
         }
     }
 }
