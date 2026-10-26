@@ -8,11 +8,11 @@
         <version>4.1.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>cat.itacademy.s04.t02.n01</groupId>
-    <artifactId>fruit-api-h2</artifactId>
+    <groupId>cat.itacademy.s04.t02.n02</groupId>
+    <artifactId>fruit-api-MYSQL</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>fruit-api-h2</name>
-    <description>REST API for managing fruit stock with H2</description>
+    <name>fruit-api-MYSQL</name>
+    <description>REST API for managing fruit stock with MySQL</description>
     <url/>
     <licenses>
         <license/>
