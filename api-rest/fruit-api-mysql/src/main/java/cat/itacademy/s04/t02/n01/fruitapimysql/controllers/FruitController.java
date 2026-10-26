@@ -1,9 +1,9 @@
-package cat.itacademy.s04.t02.n01.fruitapih2.controllers;
+package cat.itacademy.s04.t02.n01.fruitapimysql.controllers;
 
 
-import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitRequestDto;
-import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitResponseDto;
-import cat.itacademy.s04.t02.n01.fruitapih2.services.FruitService;
+import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitRequestDto;
+import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitResponseDto;
+import cat.itacademy.s04.t02.n01.fruitapimysql.services.FruitService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

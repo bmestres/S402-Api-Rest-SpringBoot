@@ -1,4 +1,4 @@
-package cat.itacademy.s04.t02.n01.fruitapih2.controllers;
+package cat.itacademy.s04.t02.n01.fruitapimysql.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

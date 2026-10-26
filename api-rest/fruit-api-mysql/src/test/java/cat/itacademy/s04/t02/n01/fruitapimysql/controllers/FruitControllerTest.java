@@ -1,9 +1,9 @@
-package cat.itacademy.s04.t02.n01.fruitapih2.controllers;
+package cat.itacademy.s04.t02.n01.fruitapimysql.controllers;
 
-import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitRequestDto;
-import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitResponseDto;
-import cat.itacademy.s04.t02.n01.fruitapih2.exception.FruitNotFoundException;
-import cat.itacademy.s04.t02.n01.fruitapih2.services.FruitServiceImpl;
+import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitRequestDto;
+import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitResponseDto;
+import cat.itacademy.s04.t02.n01.fruitapimysql.exception.FruitNotFoundException;
+import cat.itacademy.s04.t02.n01.fruitapimysql.services.FruitServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package cat.itacademy.s04.t02.n01.fruitapih2.domain;
+package cat.itacademy.s04.t02.n01.fruitapimysql.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

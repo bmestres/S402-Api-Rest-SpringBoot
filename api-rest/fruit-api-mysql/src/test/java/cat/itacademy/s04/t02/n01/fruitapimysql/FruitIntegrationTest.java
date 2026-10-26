@@ -1,8 +1,8 @@
-package cat.itacademy.s04.t02.n01.fruitapih2;
+package cat.itacademy.s04.t02.n01.fruitapimysql;
 
-import cat.itacademy.s04.t02.n01.fruitapih2.domain.Fruit;
-import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitRequestDto;
-import cat.itacademy.s04.t02.n01.fruitapih2.repositories.FruitRepository;
+import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Fruit;
+import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitRequestDto;
+import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.FruitRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

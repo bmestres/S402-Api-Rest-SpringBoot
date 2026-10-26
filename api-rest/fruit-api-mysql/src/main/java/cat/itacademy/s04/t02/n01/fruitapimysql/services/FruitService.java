@@ -1,7 +1,7 @@
-package cat.itacademy.s04.t02.n01.fruitapih2.services;
+package cat.itacademy.s04.t02.n01.fruitapimysql.services;
 
-import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitRequestDto;
-import cat.itacademy.s04.t02.n01.fruitapih2.dto.FruitResponseDto;
+import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitRequestDto;
+import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitResponseDto;
 
 import java.util.List;
 
