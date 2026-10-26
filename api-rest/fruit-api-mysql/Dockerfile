@@ -16,7 +16,7 @@ FROM amazoncorretto:21-alpine
 
 WORKDIR /fruit-app
 
-COPY --from=build-fruit-app /fruit-app/target/fruit-api-h2-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build-fruit-app /fruit-app/target/fruit-api-MYSQL-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 9000
 
