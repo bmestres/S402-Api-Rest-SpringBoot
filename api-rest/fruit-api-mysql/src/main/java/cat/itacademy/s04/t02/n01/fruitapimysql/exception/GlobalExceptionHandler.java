@@ -18,4 +18,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleSupplierNotFoundCase(SupplierNotFoundException exception) {
         return new ResponseEntity<>(new ErrorResponse(exception.getMessage()), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ExistingSupplierNameException.class)
+    public ResponseEntity<ErrorResponse> handleExistingSupplierNameCase(ExistingSupplierNameException exception) {
+        return new ResponseEntity<>(new ErrorResponse(exception.getMessage()), HttpStatus.CONFLICT);
+    }
 }

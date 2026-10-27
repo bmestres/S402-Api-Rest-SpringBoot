@@ -24,6 +24,5 @@ public class SupplierController {
     @PostMapping
     ResponseEntity<SupplierResponseDto> registerProvider(@Valid @RequestBody SupplierRequestDto supplierRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(this.supplierService.createSupplier(supplierRequest));
-
     }
 }
