@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SupplierService {
 
-    SupplierResponseDto createSupplier(SupplierRequestDto supplierRequest);
+    SupplierResponseDto registerSupplier(SupplierRequestDto supplierRequest);
     SupplierResponseDto updateSupplier(Long id, SupplierRequestDto supplierRequest);
     List<SupplierResponseDto> getAllSuppliers();
     SupplierRequestDto findSupplierById(Long id);

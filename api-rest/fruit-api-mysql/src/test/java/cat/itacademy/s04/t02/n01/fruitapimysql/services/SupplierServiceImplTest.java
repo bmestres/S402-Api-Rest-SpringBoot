@@ -1,5 +1,6 @@
 package cat.itacademy.s04.t02.n01.fruitapimysql.services;
 
+import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Fruit;
 import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Supplier;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierResponseDto;
@@ -14,8 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -29,7 +29,23 @@ class SupplierServiceImplTest {
     private SupplierServiceImpl supplierService;
 
     @Test
-    void createSupplier() {
+    @DisplayName("Register Supplier with non-existing ID should return expected DTO response")
+    void registerSupplier_withNonExistingIdShouldReturnExpectedDTO() {
+
+        SupplierRequestDto supplierRequest = new SupplierRequestDto("Name", "Country");
+
+        Supplier savedSupplier = new Supplier(supplierRequest.name(), supplierRequest.country());
+        savedSupplier.setId(1L);
+
+        when(supplierRepository.save(any(Supplier.class))).thenReturn(savedSupplier);
+
+        SupplierResponseDto responseSupplier = this.supplierService.registerSupplier(supplierRequest);
+
+        assertNotNull(responseSupplier);
+        assertEquals(1L, responseSupplier.id());
+        assertEquals("Name", responseSupplier.name());
+        assertEquals("Country", responseSupplier.country());
+
     }
 
     @Test

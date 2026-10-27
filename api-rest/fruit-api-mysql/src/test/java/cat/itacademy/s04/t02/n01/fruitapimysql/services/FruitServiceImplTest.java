@@ -36,7 +36,7 @@ class FruitServiceImplTest {
 
 
     @Test
-    @DisplayName("CreateFruit should call save Repository method and return expected DTO response")
+    @DisplayName("CreateFruit should save and return expected DTO response")
     void createFruit_shouldSaveInstanceAndReturnExpectedDto() {
 
         Supplier testSupplier = new Supplier("Name", "Country");

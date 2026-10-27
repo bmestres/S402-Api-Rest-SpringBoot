@@ -1,9 +1,9 @@
 package cat.itacademy.s04.t02.n01.fruitapimysql.controllers;
 
-import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitRequestDto;
+
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierResponseDto;
-import cat.itacademy.s04.t02.n01.fruitapimysql.exception.FruitNotFoundException;
+
 import cat.itacademy.s04.t02.n01.fruitapimysql.exception.SupplierNotFoundException;
 import cat.itacademy.s04.t02.n01.fruitapimysql.services.SupplierServiceImpl;
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +17,12 @@ import tools.jackson.databind.ObjectMapper;
 
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
+
 import static org.mockito.Mockito.when;
+
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,8 +40,26 @@ class SupplierControllerTest {
     private SupplierServiceImpl supplierService;
 
     @Test
-    void registerSupplier() {
+    @DisplayName("POST /suppliers valid request should return HTTP 201 Created and details of the supplier")
+    void registerSupplier_shouldReturnExpectedHttpResponseWithSupplierDetails() throws Exception {
+
+        SupplierRequestDto testRegisterRequest = new SupplierRequestDto("Name", "Country");
+        SupplierResponseDto expectedResponse = new SupplierResponseDto(1L, testRegisterRequest.name(), testRegisterRequest.country());
+
+        String jsonPayload = objectMapper.writeValueAsString(testRegisterRequest);
+
+        when(supplierService.registerSupplier(any(SupplierRequestDto.class)))
+                .thenReturn(expectedResponse);
+
+        mockMvc.perform(post("/suppliers").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.name").value("Name"))
+                .andExpect(jsonPath("$.country").value("Country"));
     }
+
+    @Test
+    @DisplayName("POST /suppliers with existing ID ")
 
     @Test
     @DisplayName("PUT /suppliers valid request should return HTTP 200 OK and details of the supplier")
@@ -73,6 +95,5 @@ class SupplierControllerTest {
 
         mockMvc.perform(put("/suppliers/{id}", nonExistingId).contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
                 .andExpect(status().isNotFound());
-
     }
 }
