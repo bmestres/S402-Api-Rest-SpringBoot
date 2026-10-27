@@ -99,10 +99,10 @@ class FruitControllerTest {
     void updateFruit_shouldReturnExpectedHttpWithDetails() throws Exception {
 
         Supplier supplier = new Supplier("Name");
-        Long supplierId = supplier.getId();
 
+        supplier.setId(1L);
 
-        FruitRequestDto testUpdateRequest = new FruitRequestDto("Fruit", 2, supplierId);
+        FruitRequestDto testUpdateRequest = new FruitRequestDto("Fruit", 2, 1L);
         FruitResponseDto expectedResponse = new FruitResponseDto(1L, testUpdateRequest.name(), testUpdateRequest.weightInKilos());
 
         when(fruitService.updateFruit(any(Long.class), any(FruitRequestDto.class)))
@@ -125,9 +125,10 @@ class FruitControllerTest {
     void updateFruit_withNonExistingIdShouldReturnExpectedHttpResponse() throws Exception {
 
         Supplier supplier = new Supplier("Name");
-        Long supplierId = supplier.getId();
 
-        FruitRequestDto testUpdateRequest = new FruitRequestDto("Fruit", 4, supplierId);
+        supplier.setId(1L);
+
+        FruitRequestDto testUpdateRequest = new FruitRequestDto("Fruit", 4, 1L);
         String jsonPayload = objectMapper.writeValueAsString(testUpdateRequest);
 
         Long randomId = new Random().nextLong();
@@ -146,9 +147,10 @@ class FruitControllerTest {
     void updateFruit_withNonValidDataShouldReturnExpectedHttpResponse() throws Exception {
 
         Supplier supplier = new Supplier("Name");
-        Long supplierId = supplier.getId();
+        supplier.setId(1L);;
 
-        FruitRequestDto testInvalidRequest = new FruitRequestDto("", 4, supplierId);
+
+        FruitRequestDto testInvalidRequest = new FruitRequestDto("", 4, 1L);
         String jsonPayload = objectMapper.writeValueAsString(testInvalidRequest);
 
         mockMvc.perform(put("/fruits/{id}", 1L)
