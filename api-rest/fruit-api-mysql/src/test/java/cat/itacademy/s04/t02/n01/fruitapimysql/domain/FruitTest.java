@@ -8,7 +8,10 @@ class FruitTest {
 
     @Test
     void constructor_withValidParametersInitializesAttributes() {
-        Fruit testFruit = new Fruit("Fruit", 2);
+
+        Supplier supplier = new Supplier("Name");
+
+        Fruit testFruit = new Fruit("Fruit", 2, supplier);
 
         assertEquals("Fruit", testFruit.getName());
         assertEquals(2, testFruit.getWeightInKilos());
@@ -16,11 +19,17 @@ class FruitTest {
 
     @Test
     void constructor_withEmptyNameReturnsException() {
-        assertThrows((IllegalArgumentException.class), () -> new Fruit("", 2));
+
+        Supplier supplier = new Supplier("Name");
+
+        assertThrows((IllegalArgumentException.class), () -> new Fruit("", 2, supplier));
     }
 
     @Test
     void constructor_withNegativeWeightValueReturnsException() {
-        assertThrows((IllegalArgumentException.class), () -> new Fruit("Fruit", -2));
+
+        Supplier supplier = new Supplier("Name");
+
+        assertThrows((IllegalArgumentException.class), () -> new Fruit("Fruit", -2, supplier));
     }
 }

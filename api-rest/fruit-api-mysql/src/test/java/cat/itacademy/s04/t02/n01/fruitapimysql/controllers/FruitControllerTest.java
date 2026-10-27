@@ -1,5 +1,6 @@
 package cat.itacademy.s04.t02.n01.fruitapimysql.controllers;
 
+import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Supplier;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.exception.FruitNotFoundException;
@@ -42,7 +43,11 @@ class FruitControllerTest {
     @DisplayName("POST /fruits request should return HTTP 201 Created and details of the fruit")
     void createFruit_shouldReturnExpectedHttpResponseWithDetails() throws Exception {
 
-        FruitRequestDto testCreateRequest = new FruitRequestDto("Banana", 5);
+        Supplier supplier = new Supplier("Name");
+        supplier.setId(1L);
+        Long supplierId = supplier.getId();
+
+        FruitRequestDto testCreateRequest = new FruitRequestDto("Banana", 5, supplierId);
         FruitResponseDto expectedResponse = new FruitResponseDto(1L, testCreateRequest.name(), testCreateRequest.weightInKilos());
 
         String jsonPayload = objectMapper.writeValueAsString(testCreateRequest);
@@ -62,7 +67,11 @@ class FruitControllerTest {
     @Test
     @DisplayName("POST/ fruits request should return HTTP 400 Bad request if the name is empty or the weight is not valid")
     void createFruit_shouldReturnExpectedHttpResponseWhenParametersAreNotValid() throws Exception {
-        FruitRequestDto emptyNameRequest = new FruitRequestDto("", 5);
+
+        Supplier supplier1 = new Supplier("Name1");
+        Long supplierId1 = supplier1.getId();
+
+        FruitRequestDto emptyNameRequest = new FruitRequestDto("", 5, supplierId1);
 
         String jsonPayload1 = objectMapper.writeValueAsString(emptyNameRequest);
 
@@ -72,7 +81,10 @@ class FruitControllerTest {
                 .andExpect(status().isBadRequest()
         );
 
-        FruitRequestDto nonPositiveKilosRequest = new FruitRequestDto("Fruit", 0);
+        Supplier supplier2 = new Supplier("Name2");
+        Long supplierId2 = supplier2.getId();
+
+        FruitRequestDto nonPositiveKilosRequest = new FruitRequestDto("Fruit", 0, supplierId2);
         String jsonPayload2 = objectMapper.writeValueAsString(nonPositiveKilosRequest);
 
         mockMvc.perform(post("/fruits")
@@ -85,7 +97,12 @@ class FruitControllerTest {
     @Test
     @DisplayName("PUT /fruits/{id} valid request should return HTTP 200 OK and details of the fruit")
     void updateFruit_shouldReturnExpectedHttpWithDetails() throws Exception {
-        FruitRequestDto testUpdateRequest = new FruitRequestDto("Fruit", 2);
+
+        Supplier supplier = new Supplier("Name");
+        Long supplierId = supplier.getId();
+
+
+        FruitRequestDto testUpdateRequest = new FruitRequestDto("Fruit", 2, supplierId);
         FruitResponseDto expectedResponse = new FruitResponseDto(1L, testUpdateRequest.name(), testUpdateRequest.weightInKilos());
 
         when(fruitService.updateFruit(any(Long.class), any(FruitRequestDto.class)))
@@ -107,7 +124,10 @@ class FruitControllerTest {
     @DisplayName("PUT /fruits{id} with non-existing id should return HTTP 404 Not Found response")
     void updateFruit_withNonExistingIdShouldReturnExpectedHttpResponse() throws Exception {
 
-        FruitRequestDto testUpdateRequest = new FruitRequestDto("Fruit", 4);
+        Supplier supplier = new Supplier("Name");
+        Long supplierId = supplier.getId();
+
+        FruitRequestDto testUpdateRequest = new FruitRequestDto("Fruit", 4, supplierId);
         String jsonPayload = objectMapper.writeValueAsString(testUpdateRequest);
 
         Long randomId = new Random().nextLong();
@@ -125,7 +145,10 @@ class FruitControllerTest {
     @DisplayName("PUT /fruits{id} with invalid data should return HTTP 400 Bad Request response")
     void updateFruit_withNonValidDataShouldReturnExpectedHttpResponse() throws Exception {
 
-        FruitRequestDto testInvalidRequest = new FruitRequestDto("", 4);
+        Supplier supplier = new Supplier("Name");
+        Long supplierId = supplier.getId();
+
+        FruitRequestDto testInvalidRequest = new FruitRequestDto("", 4, supplierId);
         String jsonPayload = objectMapper.writeValueAsString(testInvalidRequest);
 
         mockMvc.perform(put("/fruits/{id}", 1L)

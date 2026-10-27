@@ -15,5 +15,5 @@ public record FruitRequestDto(
         int weightInKilos,
 
         @NotNull(message = "Supplier ID must not be NULL")
-        Long supplierID
+        Long supplierId
 ) { }

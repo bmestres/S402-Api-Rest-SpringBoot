@@ -1,8 +1,10 @@
 package cat.itacademy.s04.t02.n01.fruitapimysql;
 
 import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Fruit;
+import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Supplier;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.FruitRepository;
+import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.SupplierRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,13 +37,20 @@ public class FruitIntegrationTest {
     @Autowired
     private FruitRepository fruitRepository;
 
+    @Autowired
+    private SupplierRepository supplierRepository;
+
     @Test
     @DisplayName("POST /fruits should save a new fruit in the H2 database and return expected HTTP response")
     void createFruit_shouldSaveInDatabaseAndReturnExpectedResponse() throws Exception {
 
         assertEquals(0, fruitRepository.count());
 
-        FruitRequestDto testRequest = new FruitRequestDto("Strawberry", 1);
+        Supplier supplier = supplierRepository.save(new Supplier("Name"));
+        Long supplierId = supplier.getId();
+
+        FruitRequestDto testRequest = new FruitRequestDto("Strawberry", 1, supplierId);
+
         String jsonPayload = objectMapper.writeValueAsString(testRequest);
 
         mockMvc.perform(post("/fruits")
@@ -65,10 +74,14 @@ public class FruitIntegrationTest {
     @DisplayName("PUT /fruits should modify fruit in the database and return expected HTTP response")
     void updateFruit_shouldModifyFruitInDatabaseAndReturnExpectedResponse() throws Exception {
 
-        Fruit initialFruit = fruitRepository.save(new Fruit("Apple", 2));
+        Supplier supplier = supplierRepository.save(new Supplier("Name"));
+        Long supplierId = supplier.getId();
+
+        Fruit initialFruit = fruitRepository.save(new Fruit("Apple", 2, supplier));
+
         Long id = initialFruit.getId();
 
-        FruitRequestDto testUpdateRequest = new FruitRequestDto("Banana", 1);
+        FruitRequestDto testUpdateRequest = new FruitRequestDto("Banana", 1, supplierId);
         String jsonPayload = objectMapper.writeValueAsString(testUpdateRequest);
 
         mockMvc.perform(put("/fruits/{id}", id)
@@ -95,7 +108,9 @@ public class FruitIntegrationTest {
     @DisplayName("DELETE /fruits/{id} should eliminate the fruit in the database and return expected HTTP response")
     void deleteFruit_shouldEliminateFruitAndReturnExpectedHttpResponse() throws Exception {
 
-        Fruit existingFruit = fruitRepository.save(new Fruit("Lime", 2));
+        Supplier supplier = supplierRepository.save(new Supplier("Name"));
+
+        Fruit existingFruit = fruitRepository.save(new Fruit("Lime", 2, supplier));
         Long fruitId = existingFruit.getId();
 
         mockMvc.perform(delete("/fruits/{id}", fruitId))
