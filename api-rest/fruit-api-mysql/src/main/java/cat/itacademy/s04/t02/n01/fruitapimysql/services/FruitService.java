@@ -6,9 +6,9 @@ import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitResponseDto;
 import java.util.List;
 
 public interface FruitService {
-    FruitResponseDto createFruit(FruitRequestDto request);
-    FruitResponseDto updateFruit(Long id, FruitRequestDto request);
+    FruitResponseDto createFruit(FruitRequestDto fruitRequest);
+    FruitResponseDto updateFruit(Long id, FruitRequestDto fruitRequest);
     List<FruitResponseDto> getAllFruits();
-    FruitResponseDto findById(Long id);
+    FruitResponseDto findFruitById(Long id);
     void deleteFruitById(Long id);
 }

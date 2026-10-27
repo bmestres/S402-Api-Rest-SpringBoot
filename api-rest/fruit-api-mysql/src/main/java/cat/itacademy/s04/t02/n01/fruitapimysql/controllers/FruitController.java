@@ -39,7 +39,7 @@ public class FruitController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FruitResponseDto> getFruitById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(fruitService.findById(id));
+        return ResponseEntity.status(HttpStatus.OK).body(fruitService.findFruitById(id));
     }
 
     @DeleteMapping("/{id}")

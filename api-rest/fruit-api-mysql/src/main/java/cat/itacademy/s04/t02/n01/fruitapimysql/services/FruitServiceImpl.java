@@ -58,7 +58,7 @@ public class FruitServiceImpl implements FruitService {
 
         Fruit existingFruit = allegedFruit.get();
 
-        Supplier supplier = findSupplierById(request.supplierID());
+        Supplier supplier = findSupplierById(request.supplierId());
 
         existingFruit.setName(request.name());
         existingFruit.setWeightInKilos(request.weightInKilos());
@@ -80,7 +80,7 @@ public class FruitServiceImpl implements FruitService {
 
     @Override
     @Transactional
-    public FruitResponseDto findById(Long id) {
+    public FruitResponseDto findFruitById(Long id) {
         if(id == null) {
             throw new IllegalArgumentException("ID must not be NULL");
         }
@@ -137,7 +137,7 @@ public class FruitServiceImpl implements FruitService {
         return new Fruit(
                 request.name(),
                 request.weightInKilos(),
-                findSupplierById(request.supplierID())
+                findSupplierById(request.supplierId())
         );
     }
 }
