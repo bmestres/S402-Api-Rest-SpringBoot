@@ -46,7 +46,7 @@ public class FruitIntegrationTest {
 
         assertEquals(0, fruitRepository.count());
 
-        Supplier supplier = supplierRepository.save(new Supplier("Name"));
+        Supplier supplier = supplierRepository.save(new Supplier("Name", "Country"));
         Long supplierId = supplier.getId();
 
         FruitRequestDto testRequest = new FruitRequestDto("Strawberry", 1, supplierId);
@@ -74,7 +74,7 @@ public class FruitIntegrationTest {
     @DisplayName("PUT /fruits should modify fruit in the database and return expected HTTP response")
     void updateFruit_shouldModifyFruitInDatabaseAndReturnExpectedResponse() throws Exception {
 
-        Supplier supplier = supplierRepository.save(new Supplier("Name"));
+        Supplier supplier = supplierRepository.save(new Supplier("Name", "Country" ));
         Long supplierId = supplier.getId();
 
         Fruit initialFruit = fruitRepository.save(new Fruit("Apple", 2, supplier));
@@ -108,7 +108,7 @@ public class FruitIntegrationTest {
     @DisplayName("DELETE /fruits/{id} should eliminate the fruit in the database and return expected HTTP response")
     void deleteFruit_shouldEliminateFruitAndReturnExpectedHttpResponse() throws Exception {
 
-        Supplier supplier = supplierRepository.save(new Supplier("Name"));
+        Supplier supplier = supplierRepository.save(new Supplier("Name", "Country"));
 
         Fruit existingFruit = fruitRepository.save(new Fruit("Lime", 2, supplier));
         Long fruitId = existingFruit.getId();

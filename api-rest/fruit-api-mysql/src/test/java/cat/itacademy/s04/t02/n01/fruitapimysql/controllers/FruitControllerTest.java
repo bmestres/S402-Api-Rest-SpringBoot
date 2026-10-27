@@ -43,7 +43,7 @@ class FruitControllerTest {
     @DisplayName("POST /fruits request should return HTTP 201 Created and details of the fruit")
     void createFruit_shouldReturnExpectedHttpResponseWithDetails() throws Exception {
 
-        Supplier supplier = new Supplier("Name");
+        Supplier supplier = new Supplier("Name", "Country");
         supplier.setId(1L);
         Long supplierId = supplier.getId();
 
@@ -68,7 +68,7 @@ class FruitControllerTest {
     @DisplayName("POST/ fruits request should return HTTP 400 Bad request if the name is empty or the weight is not valid")
     void createFruit_shouldReturnExpectedHttpResponseWhenParametersAreNotValid() throws Exception {
 
-        Supplier supplier1 = new Supplier("Name1");
+        Supplier supplier1 = new Supplier("Name1", "Country");
         Long supplierId1 = supplier1.getId();
 
         FruitRequestDto emptyNameRequest = new FruitRequestDto("", 5, supplierId1);
@@ -81,7 +81,7 @@ class FruitControllerTest {
                 .andExpect(status().isBadRequest()
         );
 
-        Supplier supplier2 = new Supplier("Name2");
+        Supplier supplier2 = new Supplier("Name2", "Country");
         Long supplierId2 = supplier2.getId();
 
         FruitRequestDto nonPositiveKilosRequest = new FruitRequestDto("Fruit", 0, supplierId2);
@@ -98,7 +98,7 @@ class FruitControllerTest {
     @DisplayName("PUT /fruits/{id} valid request should return HTTP 200 OK and details of the fruit")
     void updateFruit_shouldReturnExpectedHttpWithDetails() throws Exception {
 
-        Supplier supplier = new Supplier("Name");
+        Supplier supplier = new Supplier("Name", "Country");
 
         supplier.setId(1L);
 
@@ -124,7 +124,7 @@ class FruitControllerTest {
     @DisplayName("PUT /fruits{id} with non-existing id should return HTTP 404 Not Found response")
     void updateFruit_withNonExistingIdShouldReturnExpectedHttpResponse() throws Exception {
 
-        Supplier supplier = new Supplier("Name");
+        Supplier supplier = new Supplier("Name", "Country");
 
         supplier.setId(1L);
 
@@ -146,7 +146,7 @@ class FruitControllerTest {
     @DisplayName("PUT /fruits{id} with invalid data should return HTTP 400 Bad Request response")
     void updateFruit_withNonValidDataShouldReturnExpectedHttpResponse() throws Exception {
 
-        Supplier supplier = new Supplier("Name");
+        Supplier supplier = new Supplier("Name", "Country");
         supplier.setId(1L);;
 
 
@@ -200,7 +200,7 @@ class FruitControllerTest {
 
         FruitResponseDto expectedReturn = new FruitResponseDto(1L, "Prune", 2);
 
-        when(fruitService.findById(1L)).thenReturn(expectedReturn);
+        when(fruitService.findFruitById(1L)).thenReturn(expectedReturn);
 
         mockMvc.perform(get("/fruits/{id}", 1L))
                 .andExpect(status().isOk())
@@ -217,7 +217,7 @@ class FruitControllerTest {
         Long nonExistingId = 38L;
         String message = String.format("Fruit with ID %d not found", nonExistingId);
 
-        when(fruitService.findById(nonExistingId))
+        when(fruitService.findFruitById(nonExistingId))
                 .thenThrow(new FruitNotFoundException(message));
 
         mockMvc.perform(get("/fruits/{id}", nonExistingId))
@@ -234,7 +234,7 @@ class FruitControllerTest {
 
         FruitResponseDto expectedReturn = new FruitResponseDto(existingId, "Fruit", 1);
 
-        when(fruitService.findById(existingId)).thenReturn(expectedReturn);
+        when(fruitService.findFruitById(existingId)).thenReturn(expectedReturn);
 
         mockMvc.perform(delete("/fruits/{id}", existingId))
                 .andExpect(status().isNoContent());

@@ -11,12 +11,12 @@ class SupplierTest {
     @DisplayName("Constructor with valid parameters should initialize fields")
     void constructor_withValidParametersShouldInitializeFields() {
 
-        Supplier testSupplier = new Supplier("Correct name");
+        Supplier testSupplier = new Supplier("Correct name","Country");
         assertEquals("Correct name", testSupplier.getName());
     }
 
-    @Test
-    @DisplayName("Constructor with empty name should return ")
+    /*@Test
+    @DisplayName("Constructor with empty name should return ")*/
 
 
 

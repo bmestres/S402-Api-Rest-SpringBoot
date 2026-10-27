@@ -80,7 +80,7 @@ public class FruitServiceImpl implements FruitService {
 
     @Override
     @Transactional
-    public FruitResponseDto findById(Long id) {
+    public FruitResponseDto findFruitById(Long id) {
         if(id == null) {
             throw new IllegalArgumentException("ID must not be NULL");
         }

@@ -16,18 +16,30 @@ public class Supplier {
     @Column(name = "name", nullable = false)
     private String name;
 
-    public Supplier(String name) {
+    @Column(name = "country", nullable = false)
+    private String country;
 
-        checkInputData(name);
+    public Supplier(String name, String country) {
+
+        checkInputData(name, country);
+
         this.name = name;
+        this.country = country;
     }
 
-    private static void checkInputData(String name) {
-        if(name == null) {
+    private static void checkInputData(String name, String country) {
+        if (name == null) {
             throw new IllegalArgumentException("Name must not be NULL");
         }
-        if(name.trim().isBlank()) {
+        if (name.trim().isBlank()) {
             throw new IllegalArgumentException("Name must not be empty");
+        }
+
+        if (country == null) {
+            throw new IllegalArgumentException("Country must not be NULL");
+        }
+        if (country.trim().isBlank()) {
+            throw new IllegalArgumentException("Country must not be empty");
         }
     }
 }

@@ -11,7 +11,7 @@ class FruitTest {
     @DisplayName("Constructor with valid parameters should initialize all fields")
     void constructor_withValidParametersInitializesAttributes() {
 
-        Supplier supplier = new Supplier("Name");
+        Supplier supplier = new Supplier("Name", "Country");
 
         Fruit testFruit = new Fruit("Fruit", 2, supplier);
 
@@ -24,7 +24,7 @@ class FruitTest {
     @DisplayName("Constructor with empty fruit name should return exception")
     void constructor_withEmptyNameReturnsException() {
 
-        Supplier supplier = new Supplier("Name");
+        Supplier supplier = new Supplier("Name", "Country");
 
         assertThrows((IllegalArgumentException.class), () -> new Fruit("", 2, supplier));
     }
@@ -33,7 +33,7 @@ class FruitTest {
     @DisplayName("Constructor with negative weight value should return exception")
     void constructor_withNegativeWeightValueReturnsException() {
 
-        Supplier supplier = new Supplier("Name");
+        Supplier supplier = new Supplier("Name", "Country");
 
         assertThrows((IllegalArgumentException.class), () -> new Fruit("Fruit", -2, supplier));
     }

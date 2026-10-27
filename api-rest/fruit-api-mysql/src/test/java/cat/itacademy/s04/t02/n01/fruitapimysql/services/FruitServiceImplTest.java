@@ -39,7 +39,7 @@ class FruitServiceImplTest {
     @DisplayName("CreateFruit should call save Repository method and return expected DTO response")
     void createFruit_shouldSaveInstanceAndReturnExpectedDto() {
 
-        Supplier testSupplier = new Supplier("Name");
+        Supplier testSupplier = new Supplier("Name", "Country");
         testSupplier.setId(1L);
 
         Long supplierId = testSupplier.getId();
@@ -58,14 +58,13 @@ class FruitServiceImplTest {
         assertEquals(1L, result.id());
         assertEquals("Orange", result.name());
         assertEquals(3, result.weightInKilos());
-
     }
 
     @Test
     @DisplayName("Update fruit should call expected Repository methods and return expected DTO response")
     void updateFruit_shouldCallExpectedRepositoryMethodsAndReturnExpectedDto() {
 
-        Supplier testSupplier = new Supplier("Name");
+        Supplier testSupplier = new Supplier("Name", "Country");
         testSupplier.setId(1L);
 
         Long supplierId = testSupplier.getId();
@@ -99,8 +98,8 @@ class FruitServiceImplTest {
     @DisplayName("Get All Fruits in Fruit Service should return expected DTOs for each fruit in the repository")
     void getAllFruits_ShouldReturnExpectedDtoForEachFruitInRepository() {
 
-        Supplier supplier1 = new Supplier("Name1");
-        Supplier supplier2 = new Supplier("Name2");
+        Supplier supplier1 = new Supplier("Name1", "Country1");
+        Supplier supplier2 = new Supplier("Name2", "Country2");
 
         Long supplierId1 = supplier1.getId();
         Long supplierId2 = supplier2.getId();
@@ -128,7 +127,7 @@ class FruitServiceImplTest {
     @DisplayName("Get Fruit By ID should return expected DTO if ID exists")
     void findById_shouldReturnExpectedDto() {
 
-        Supplier supplier = new Supplier("Name");
+        Supplier supplier = new Supplier("Name", "Country");
 
         Long existingId = 1L;
         Fruit existingFruit = new Fruit("Lemon", 3, supplier);
@@ -138,7 +137,7 @@ class FruitServiceImplTest {
                 .findById(existingId))
                 .thenReturn(Optional.of(existingFruit));
 
-        FruitResponseDto responseFruit = fruitService.findById(existingId);
+        FruitResponseDto responseFruit = fruitService.findFruitById(existingId);
 
         assertNotNull(responseFruit);
         assertEquals(existingId, responseFruit.id());
@@ -154,14 +153,14 @@ class FruitServiceImplTest {
 
         when(fruitRepository.findById(nonExistingId)).thenReturn(Optional.empty());
 
-        FruitNotFoundException returnedException = assertThrows(FruitNotFoundException.class, () -> fruitService.findById(nonExistingId));
+        FruitNotFoundException returnedException = assertThrows(FruitNotFoundException.class, () -> fruitService.findFruitById(nonExistingId));
     }
 
     @Test
     @DisplayName("Delete fruit should call expected repository methods if ID exists")
     void deleteFruitById_shouldCallExpectedRepositoryMethodsIfIdExists() {
 
-        Supplier supplier = new Supplier("Name");
+        Supplier supplier = new Supplier("Name","Country");
 
         Fruit existingFruit = new Fruit("Prune", 1, supplier);
         existingFruit.setId(1L);
