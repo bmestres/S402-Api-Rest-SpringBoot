@@ -6,10 +6,7 @@ import cat.itacademy.s04.t02.n01.fruitapimysql.services.SupplierService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/suppliers")
@@ -22,7 +19,12 @@ public class SupplierController {
     }
 
     @PostMapping
-    ResponseEntity<SupplierResponseDto> registerProvider(@Valid @RequestBody SupplierRequestDto supplierRequest) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.supplierService.createSupplier(supplierRequest));
+    ResponseEntity<SupplierResponseDto> registerSupplier(@Valid @RequestBody SupplierRequestDto supplierRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.supplierService.createSupplier(supplierRequest));
+    }
+
+    @PutMapping("/{id}")
+    ResponseEntity<SupplierResponseDto> updateSupplier(@PathVariable Long id, @Valid @RequestBody SupplierRequestDto supplierRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.supplierService.updateSupplier(id, supplierRequest));
     }
 }

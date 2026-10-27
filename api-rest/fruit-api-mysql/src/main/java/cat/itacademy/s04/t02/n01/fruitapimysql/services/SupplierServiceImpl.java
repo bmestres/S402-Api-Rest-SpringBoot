@@ -53,7 +53,7 @@ public class SupplierServiceImpl implements SupplierService {
         }
 
         Supplier existingSupplier = allegedSupplier.get();
-        
+
         existingSupplier.setName(supplierRequest.name());
         existingSupplier.setCountry(supplierRequest.country());
 
