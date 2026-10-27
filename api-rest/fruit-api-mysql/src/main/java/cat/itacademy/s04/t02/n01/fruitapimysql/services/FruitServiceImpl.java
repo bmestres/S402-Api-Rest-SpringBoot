@@ -58,8 +58,11 @@ public class FruitServiceImpl implements FruitService {
 
         Fruit existingFruit = allegedFruit.get();
 
+        Supplier supplier = findSupplierById(request.supplierID());
+
         existingFruit.setName(request.name());
         existingFruit.setWeightInKilos(request.weightInKilos());
+        existingFruit.setSupplier(supplier);
 
         return buildDtoFromFruit(fruitRepository.save(existingFruit));
     }
