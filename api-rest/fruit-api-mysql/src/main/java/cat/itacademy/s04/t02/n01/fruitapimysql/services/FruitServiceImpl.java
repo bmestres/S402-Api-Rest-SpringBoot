@@ -40,7 +40,7 @@ public class FruitServiceImpl implements FruitService {
 
         Fruit newFruit = buildFruitFromDto(request);
 
-        return buildDtoFromFruit(fruitRepository.save(newFruit));
+        return buildDtoFromFruit(this.fruitRepository.save(newFruit));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class FruitServiceImpl implements FruitService {
             throw new IllegalArgumentException("Request must not be NULL");
         }
 
-        Optional<Fruit> allegedFruit = fruitRepository.findById(id);
+        Optional<Fruit> allegedFruit = this.fruitRepository.findById(id);
 
         if(allegedFruit.isEmpty()) {
             throw new FruitNotFoundException(String.format("Fruit with id %d not found", id));
@@ -64,14 +64,14 @@ public class FruitServiceImpl implements FruitService {
         existingFruit.setWeightInKilos(request.weightInKilos());
         existingFruit.setSupplier(supplier);
 
-        return buildDtoFromFruit(fruitRepository.save(existingFruit));
+        return buildDtoFromFruit(this.fruitRepository.save(existingFruit));
     }
 
     @Override
     @Transactional
     public List<FruitResponseDto> getAllFruits() {
 
-        List<Fruit> fruits = fruitRepository.findAll();
+        List<Fruit> fruits = this.fruitRepository.findAll();
 
         return fruits.stream()
                         .map(fruit -> buildDtoFromFruit(fruit))
@@ -85,7 +85,7 @@ public class FruitServiceImpl implements FruitService {
             throw new IllegalArgumentException("ID must not be NULL");
         }
 
-        Optional<Fruit> allegedFruit = fruitRepository.findById(id);
+        Optional<Fruit> allegedFruit = this.fruitRepository.findById(id);
 
         if(allegedFruit.isEmpty()) {
             throw new FruitNotFoundException(String.format("Fruit with ID %d not found", id));
@@ -99,12 +99,12 @@ public class FruitServiceImpl implements FruitService {
         if(id == null) {
             throw new IllegalArgumentException("ID must not be NULL");
         }
-        Optional<Fruit> allegedFruit = fruitRepository.findById(id);
+        Optional<Fruit> allegedFruit = this.fruitRepository.findById(id);
 
         if(allegedFruit.isEmpty()) {
             throw new FruitNotFoundException(String.format("Fruit with ID %d not found", id));
         }
-        fruitRepository.deleteById(id);
+        this.fruitRepository.deleteById(id);
     }
 
     private static void checkInputData(FruitRepository fruitRepository, SupplierRepository supplierRepository) {
@@ -118,7 +118,7 @@ public class FruitServiceImpl implements FruitService {
     }
 
     private Supplier findSupplierById(Long supplierId) {
-        Optional<Supplier> allegedSupplier = supplierRepository.findById(supplierId);
+        Optional<Supplier> allegedSupplier = this.supplierRepository.findById(supplierId);
 
         if(allegedSupplier.isEmpty()) {
             throw new SupplierNotFoundException(String.format("Supplier with id %d not found", supplierId));
