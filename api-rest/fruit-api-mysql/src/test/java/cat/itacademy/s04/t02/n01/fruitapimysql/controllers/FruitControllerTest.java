@@ -105,7 +105,8 @@ class FruitControllerTest {
         FruitRequestDto testUpdateRequest = new FruitRequestDto("Fruit", 2, 1L);
         FruitResponseDto expectedResponse = new FruitResponseDto(1L, testUpdateRequest.name(), testUpdateRequest.weightInKilos());
 
-        when(fruitService.updateFruit(any(Long.class), any(FruitRequestDto.class)))
+        when(fruitService
+                .updateFruit(any(Long.class), any(FruitRequestDto.class)))
                 .thenReturn(expectedResponse);
 
         String jsonPayload = objectMapper.writeValueAsString(testUpdateRequest);
@@ -131,12 +132,12 @@ class FruitControllerTest {
         FruitRequestDto testUpdateRequest = new FruitRequestDto("Fruit", 4, 1L);
         String jsonPayload = objectMapper.writeValueAsString(testUpdateRequest);
 
-        Long randomId = new Random().nextLong();
+        Long nonExistingId = 33L;
 
         when(fruitService.updateFruit(any(Long.class), any(FruitRequestDto.class)))
-                .thenThrow(new FruitNotFoundException(String.format("Fruit with ID %d not found", randomId)));
+                .thenThrow(new FruitNotFoundException(String.format("Fruit with ID %d not found", nonExistingId)));
 
-        mockMvc.perform(put("/fruits/{id}", randomId)
+        mockMvc.perform(put("/fruits/{id}", nonExistingId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonPayload))
                 .andExpect(status().isNotFound());
