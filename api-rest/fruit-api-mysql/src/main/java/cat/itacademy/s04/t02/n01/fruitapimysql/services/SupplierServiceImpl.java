@@ -31,7 +31,7 @@ public class SupplierServiceImpl implements SupplierService {
 
         Supplier supplier = buildSupplierFromDto(supplierRequest);
 
-        if(this.supplierRepository.existsByName(supplier)) {
+        if(this.supplierRepository.existsByName(supplier.getName())) {
             throw new ExistingSupplierNameException(String.format("Supplier %s already exists", supplier.getName()));
         }
 

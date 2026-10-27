@@ -59,9 +59,6 @@ class SupplierControllerTest {
     }
 
     @Test
-    @DisplayName("POST /suppliers with existing ID ")
-
-    @Test
     @DisplayName("PUT /suppliers valid request should return HTTP 200 OK and details of the supplier")
     void updateSupplier_validRequestShouldReturnExpectedHttpWithDetails() throws Exception {
 
