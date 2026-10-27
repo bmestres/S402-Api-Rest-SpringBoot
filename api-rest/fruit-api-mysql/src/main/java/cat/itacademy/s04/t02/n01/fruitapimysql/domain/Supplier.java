@@ -15,7 +15,7 @@ public class Supplier {
     private Long id;
 
     @Column(name = "name", nullable = false)
-    String name;
+    private String name;
 
     public Supplier(String name) {
         this.name = name;
