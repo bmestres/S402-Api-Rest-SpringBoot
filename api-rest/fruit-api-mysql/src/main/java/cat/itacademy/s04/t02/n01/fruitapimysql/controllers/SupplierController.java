@@ -20,7 +20,7 @@ public class SupplierController {
 
     @PostMapping
     ResponseEntity<SupplierResponseDto> registerSupplier(@Valid @RequestBody SupplierRequestDto supplierRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.supplierService.createSupplier(supplierRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.supplierService.registerSupplier(supplierRequest));
     }
 
     @PutMapping("/{id}")

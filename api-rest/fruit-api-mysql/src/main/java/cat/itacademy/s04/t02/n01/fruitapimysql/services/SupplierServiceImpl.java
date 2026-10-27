@@ -24,7 +24,7 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     @Transactional
-    public SupplierResponseDto createSupplier(SupplierRequestDto supplierRequest) {
+    public SupplierResponseDto registerSupplier(SupplierRequestDto supplierRequest) {
         if(supplierRequest == null) {
             throw new IllegalArgumentException("Request must not be NULL");
         }
