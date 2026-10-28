@@ -90,15 +90,8 @@ public class FruitServiceImpl implements FruitService {
             throw new SupplierNotFoundException(String.format("Supplier with ID %d not found", id));
         }
 
-        List<Fruit> fruitsBySupplier = this
-                .fruitRepository
-                .findAll()
-                .stream()
-                .filter(fruit -> id.equals(fruit.getSupplier().getId()))
-                .toList();
-
-
-        return fruitsBySupplier
+        return this.fruitRepository
+                .findBySupplierId(id)
                 .stream()
                 .map(fruit -> buildDtoFromFruit(fruit))
                 .collect(Collectors.toList());

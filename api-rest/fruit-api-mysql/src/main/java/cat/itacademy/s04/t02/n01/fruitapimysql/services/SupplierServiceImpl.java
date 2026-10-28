@@ -82,8 +82,14 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     @Transactional
-    public SupplierRequestDto findSupplierById(Long id) {
-        return null;
+    public SupplierResponseDto findSupplierById(Long id) {
+
+        Optional<Supplier> allegedSupplier = this.supplierRepository.findById(id);
+
+        if(allegedSupplier.isEmpty()) {
+            throw new SupplierNotFoundException(String.format("Supplier with ID %d not found", id));
+        }
+        return buildDtoFromSupplier(allegedSupplier.get());
     }
 
     @Override

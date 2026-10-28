@@ -10,12 +10,20 @@ services:
             - "3306:3306"
         volumes:
             - mysql-data:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-ppsw"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
         
     # JAVA APP
     fruit-api:
         build: .
         ports:
             - "9000:9000"
+        depends_on:
+            fruit-api-mysql-database:
+                condition: service_healthy
         environment:
             SPRING_DATASOURCE_URL: jdbc:mysql://fruit-api-mysql-database:3306/fruit-api-mysql-database
             SPRING_DATASOURCE_USERNAME: root

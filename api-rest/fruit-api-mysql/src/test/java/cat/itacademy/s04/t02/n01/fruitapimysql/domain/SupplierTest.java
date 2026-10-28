@@ -15,7 +15,4 @@ class SupplierTest {
         assertEquals("Correct name", testSupplier.getName());
     }
 
-    /*@Test
-    @DisplayName("Constructor with empty name should return ")*/
-
 }

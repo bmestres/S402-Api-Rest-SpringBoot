@@ -37,7 +37,7 @@ public class FruitController {
     }
 
    @GetMapping(params = "supplier_id")
-    public ResponseEntity<List<FruitResponseDto>> listFruitsBySupplier(@RequestParam(name = "supplier_id") @PathVariable Long id) {
+    public ResponseEntity<List<FruitResponseDto>> listFruitsBySupplier(@RequestParam(name = "supplier_id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(fruitService.getFruitsBySupplier(id));
     }
 

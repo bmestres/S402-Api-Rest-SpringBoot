@@ -10,7 +10,7 @@ public interface SupplierService {
     SupplierResponseDto registerSupplier(SupplierRequestDto supplierRequest);
     SupplierResponseDto updateSupplier(Long id, SupplierRequestDto supplierRequest);
     List<SupplierResponseDto> getAllSuppliers();
-    SupplierRequestDto findSupplierById(Long id);
+    SupplierResponseDto findSupplierById(Long id);
     void deleteSupplierById(Long id);
 
 }
