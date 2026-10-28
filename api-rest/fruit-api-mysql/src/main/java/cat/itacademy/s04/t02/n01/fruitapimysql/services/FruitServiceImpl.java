@@ -38,6 +38,10 @@ public class FruitServiceImpl implements FruitService {
             throw new IllegalArgumentException("Request must not be NULL");
         }
 
+        if(!supplierRepository.existsById(request.supplierId())) {
+            throw new SupplierNotFoundException(String.format("Supplier with ID %d not found", request.supplierId()));
+        }
+
         Fruit newFruit = buildFruitFromDto(request);
 
         return buildDtoFromFruit(this.fruitRepository.save(newFruit));
