@@ -36,20 +36,19 @@ class FruitServiceImplTest {
 
 
     @Test
-    @DisplayName("CreateFruit should save and return expected DTO response")
+    @DisplayName("CreateFruit with existent supplier should save and return expected DTO response")
     void createFruit_shouldSaveInstanceAndReturnExpectedDto() {
 
         Supplier testSupplier = new Supplier("Name", "Country");
         testSupplier.setId(1L);
 
-        Long supplierId = testSupplier.getId();
-
-        FruitRequestDto testCreateRequest = new FruitRequestDto("Orange", 3, supplierId);
+        FruitRequestDto testCreateRequest = new FruitRequestDto("Orange", 3, 1L);
 
         Fruit savedFruit = new Fruit(testCreateRequest.name(), testCreateRequest.weightInKilos(), testSupplier);
         savedFruit.setId(1L);
 
-        when(supplierRepository.findById(supplierId)).thenReturn(Optional.of(testSupplier));
+        when(supplierRepository.existsById(1L)).thenReturn(true);
+        when(supplierRepository.findById(1L)).thenReturn(Optional.of(testSupplier));
         when(fruitRepository.save(any(Fruit.class))).thenReturn(savedFruit);
 
         FruitResponseDto result = fruitService.createFruit(testCreateRequest);
@@ -152,7 +151,7 @@ class FruitServiceImplTest {
         when(this.fruitRepository.findAll()).thenReturn(List.of(fruit1, fruit2));
 
         List<FruitResponseDto> filteredFruits = this.fruitService.getFruitsBySupplier(1L);
-        
+
         assertEquals( 1, filteredFruits.size());
         assertEquals("Peer", filteredFruits.getFirst().name());
         assertEquals(2, filteredFruits.getFirst().weightInKilos());
