@@ -196,7 +196,7 @@ class FruitControllerTest {
     }
 
     @Test
-    @DisplayName("GET /fruits should return expected json array with HTTP OK status")
+    @DisplayName("GET /fruits should return expected array with HTTP 200 OK status")
     void listAll_shouldReturnExpectedHttpStatusWithExpectedJsonArray() throws Exception {
 
         FruitResponseDto fruit1 = new FruitResponseDto(1L,"Tangerine", 2);
@@ -252,7 +252,7 @@ class FruitControllerTest {
     }
 
     @Test
-    @DisplayName("GET /fruits?supplier_id={id} with non-existing ID should return HTTP 04 NOT FOUND with explanation")
+    @DisplayName("GET /fruits?supplier_id={id} with non-existing ID should return HTTP 404 NOT FOUND with explanation")
     void listFruitsBySupplier_shouldReturnExpectedHttpResponseWithMessage() throws Exception {
 
         Long nonExistingId = 38L;
@@ -265,6 +265,30 @@ class FruitControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorMessage").value(message));
+    }
+
+    @Test
+    @DisplayName("GET /fruits?supplier_id={id} with existing ID should return HTTP 200 OK with expected array")
+    void listUsersBySupplier_shouldReturnExpectedHttpResponseWithFruits() throws Exception {
+
+        FruitResponseDto fruit1 = new FruitResponseDto(1L,"Tangerine", 2);
+        FruitResponseDto fruit2 = new FruitResponseDto(2L,"Blueberry", 1);
+
+        Long existingSupplierId = 1L;
+
+        when(fruitService
+                .getFruitsBySupplier(existingSupplierId))
+                .thenReturn(List.of(fruit1, fruit2));
+
+        mockMvc.perform(get("/fruits?supplier_id={id}", existingSupplierId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].name").value("Tangerine"))
+                .andExpect(jsonPath("$[0].weight_in_kilos").value(2))
+                .andExpect(jsonPath("$[1].id").value(2L))
+                .andExpect(jsonPath("$[1].name").value("Blueberry"))
+                .andExpect(jsonPath("$[1].weight_in_kilos").value(1));
     }
 
     @Test
