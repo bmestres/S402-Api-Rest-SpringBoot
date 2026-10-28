@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/suppliers")
 public class SupplierController {
@@ -27,7 +29,12 @@ public class SupplierController {
     public ResponseEntity<SupplierResponseDto> updateSupplier(@PathVariable Long id, @Valid @RequestBody SupplierRequestDto supplierRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(this.supplierService.updateSupplier(id, supplierRequest));
     }
-    
+
+    @GetMapping
+    public ResponseEntity<List<SupplierResponseDto>> listAllSuppliers() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.supplierService.getAllSuppliers());
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<SupplierResponseDto> deleteSupplier(@PathVariable Long id) {

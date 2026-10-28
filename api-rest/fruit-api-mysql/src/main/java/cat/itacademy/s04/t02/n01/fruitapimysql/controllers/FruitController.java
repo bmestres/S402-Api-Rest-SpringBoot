@@ -32,7 +32,7 @@ public class FruitController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FruitResponseDto>> listAll() {
+    public ResponseEntity<List<FruitResponseDto>> listAllFruits() {
         return ResponseEntity.status(HttpStatus.OK).body(fruitService.getAllFruits());
     }
 
