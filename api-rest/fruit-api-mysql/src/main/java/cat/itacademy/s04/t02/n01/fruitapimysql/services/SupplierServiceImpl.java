@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -71,7 +72,12 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     @Transactional
     public List<SupplierResponseDto> getAllSuppliers() {
-        return List.of();
+        List<Supplier> suppliers = this.supplierRepository.findAll();
+
+        return suppliers
+                .stream()
+                .map(supplier -> buildDtoFromSupplier(supplier))
+                .toList();
     }
 
     @Override

@@ -8,11 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/suppliers")
 public class SupplierController {
 
-    private SupplierService supplierService;
+    private final SupplierService supplierService;
 
     public SupplierController(SupplierService supplierService) {
         this.supplierService = supplierService;
@@ -28,8 +30,15 @@ public class SupplierController {
         return ResponseEntity.status(HttpStatus.OK).body(this.supplierService.updateSupplier(id, supplierRequest));
     }
 
+    @GetMapping
+    public ResponseEntity<List<SupplierResponseDto>> listAllSuppliers() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.supplierService.getAllSuppliers());
+    }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<SupplierResponseDto> deleteSupplier(@PathVariable Long id) {
+        this.supplierService.deleteSupplierById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
