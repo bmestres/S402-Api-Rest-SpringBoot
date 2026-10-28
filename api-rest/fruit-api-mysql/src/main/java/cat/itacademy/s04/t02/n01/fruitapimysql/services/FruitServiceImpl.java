@@ -91,7 +91,7 @@ public class FruitServiceImpl implements FruitService {
                 .fruitRepository
                 .findAll()
                 .stream()
-                .filter(fruit -> Objects.equals(fruit.getSupplier().getId(), id))
+                .filter(fruit -> id.equals(fruit.getSupplier().getId()))
                 .toList();
 
         return fruitsBySupplier

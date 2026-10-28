@@ -114,9 +114,6 @@ class FruitServiceImplTest {
         Supplier supplier1 = new Supplier("Name1", "Country1");
         Supplier supplier2 = new Supplier("Name2", "Country2");
 
-        Long supplierId1 = supplier1.getId();
-        Long supplierId2 = supplier2.getId();
-
         Fruit fruit1 = new Fruit("Peer", 2, supplier1);
         Fruit fruit2 = new Fruit("Watermelon", 5, supplier2);
 
@@ -134,6 +131,31 @@ class FruitServiceImplTest {
         assertEquals(2L, result.get(1).id());
         assertEquals("Watermelon", result.get(1).name());
         assertEquals(5, result.get(1).weightInKilos());
+    }
+
+    @Test
+    @DisplayName("Get Fruits By ID should return expected DTOs with each fruit matching Supplier ID")
+    void getFruitsById_ShouldReturnExpectedDto() {
+
+        Supplier supplier1 = new Supplier("Name1", "Country1");
+        Supplier supplier2 = new Supplier("Name2", "Country2");
+
+        supplier1.setId(1L);
+        supplier2.setId(2L);
+
+        Fruit fruit1 = new Fruit("Peer", 2, supplier1);
+        Fruit fruit2 = new Fruit("Watermelon", 5, supplier2);
+
+        fruit1.setId(1L);
+        fruit2.setId(2L);
+
+        when(this.fruitRepository.findAll()).thenReturn(List.of(fruit1, fruit2));
+
+        List<FruitResponseDto> filteredFruits = this.fruitService.getFruitsBySupplier(1L);
+        
+        assertEquals( 1, filteredFruits.size());
+        assertEquals("Peer", filteredFruits.getFirst().name());
+        assertEquals(2, filteredFruits.getFirst().weightInKilos());
     }
 
     @Test
