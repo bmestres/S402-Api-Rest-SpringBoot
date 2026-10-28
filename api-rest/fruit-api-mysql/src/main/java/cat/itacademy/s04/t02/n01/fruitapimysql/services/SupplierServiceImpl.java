@@ -5,6 +5,7 @@ import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.exception.RepeatedSupplierNameException;
 import cat.itacademy.s04.t02.n01.fruitapimysql.exception.SupplierNotFoundException;
+import cat.itacademy.s04.t02.n01.fruitapimysql.exception.SupplierWithFruitsAssociatedException;
 import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.FruitRepository;
 import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.SupplierRepository;
 import jakarta.transaction.Transactional;
@@ -88,7 +89,7 @@ public class SupplierServiceImpl implements SupplierService {
         }
 
         if(this.fruitRepository.existsBySupplierId(id)) {
-            throw new SupplierNotFoundException("Supplier with fruits associated");
+            throw new SupplierWithFruitsAssociatedException("Supplier with fruits associated");
         }
 
         this.supplierRepository.deleteById(id);
