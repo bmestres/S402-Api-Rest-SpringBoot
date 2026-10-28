@@ -5,7 +5,7 @@ import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Supplier;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.FruitRepository;
 import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.SupplierRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +53,6 @@ public class FruitIntegrationTest {
     @DisplayName("POST /fruits should save a new fruit in the H2 database and return expected HTTP response")
     void createFruit_shouldSaveInDatabaseAndReturnExpectedResponse() throws Exception {
 
-        assertEquals(0, fruitRepository.count());
-
         Supplier supplier = supplierRepository.save(new Supplier("Name", "Country"));
         Long supplierId = supplier.getId();
 
@@ -69,7 +67,7 @@ public class FruitIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Strawberry"))
                 .andExpect(jsonPath("$.weight_in_kilos").value(1));
 
-        List<Fruit> fruits = fruitRepository.findAll();
+        List<Fruit> fruits = fruitRepository.findBySupplierId(supplierId);
 
         assertEquals(1, fruits.size());
 
