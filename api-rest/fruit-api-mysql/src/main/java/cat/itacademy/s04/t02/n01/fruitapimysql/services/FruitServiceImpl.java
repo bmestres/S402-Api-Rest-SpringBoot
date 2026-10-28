@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,7 +25,7 @@ public class FruitServiceImpl implements FruitService {
 
     public FruitServiceImpl(FruitRepository fruitRepository, SupplierRepository supplierRepository) {
 
-        checkInputData(fruitRepository, supplierRepository);
+        checkDependencies(fruitRepository, supplierRepository);
 
         this.fruitRepository = fruitRepository;
         this.supplierRepository = supplierRepository;
@@ -134,7 +133,7 @@ public class FruitServiceImpl implements FruitService {
         this.fruitRepository.deleteById(id);
     }
 
-    private static void checkInputData(FruitRepository fruitRepository, SupplierRepository supplierRepository) {
+    private static void checkDependencies(FruitRepository fruitRepository, SupplierRepository supplierRepository) {
         if(fruitRepository == null) {
             throw new IllegalArgumentException("Fruit Repository must not be NULL");
         }
@@ -153,7 +152,7 @@ public class FruitServiceImpl implements FruitService {
         return allegedSupplier.get();
     }
 
-    private FruitResponseDto buildDtoFromFruit(Fruit fruit) {
+    private static FruitResponseDto buildDtoFromFruit(Fruit fruit) {
         return new FruitResponseDto(
                 fruit.getId(),
                 fruit.getName(),

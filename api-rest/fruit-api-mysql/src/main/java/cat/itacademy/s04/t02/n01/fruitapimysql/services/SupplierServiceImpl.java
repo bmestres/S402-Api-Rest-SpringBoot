@@ -5,6 +5,7 @@ import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.exception.RepeatedSupplierNameException;
 import cat.itacademy.s04.t02.n01.fruitapimysql.exception.SupplierNotFoundException;
+import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.FruitRepository;
 import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.SupplierRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,14 @@ import java.util.Optional;
 public class SupplierServiceImpl implements SupplierService {
 
     SupplierRepository supplierRepository;
+    FruitRepository fruitRepository;
 
-    public SupplierServiceImpl(SupplierRepository supplierRepository) {
+    public SupplierServiceImpl(SupplierRepository supplierRepository, FruitRepository fruitRepository) {
+
+        checkDependencies(supplierRepository, fruitRepository);
+
         this.supplierRepository = supplierRepository;
+        this.fruitRepository = fruitRepository;
     }
 
     @Override
@@ -28,6 +34,7 @@ public class SupplierServiceImpl implements SupplierService {
         if(supplierRequest == null) {
             throw new IllegalArgumentException("Request must not be NULL");
         }
+
 
         Supplier supplier = buildSupplierFromDto(supplierRequest);
 
@@ -75,15 +82,35 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     @Transactional
     public void deleteSupplierById(Long id) {
+
+        if(!this.supplierRepository.existsById(id)) {
+            throw new SupplierNotFoundException(String.format("Supplier with ID %d not found", id));
+        }
+
+        if(this.fruitRepository.existsBySupplierId(id)) {
+            throw new SupplierNotFoundException("Supplier with fruits associated");
+        }
+
+        this.supplierRepository.deleteById(id);
     }
 
-    Supplier buildSupplierFromDto(SupplierRequestDto request) {
+    private static void checkDependencies(SupplierRepository supplierRepository, FruitRepository fruitRepository) {
+        if(supplierRepository == null) {
+            throw new IllegalArgumentException("Supplier Repository must not be NULL");
+        }
+
+        if(fruitRepository == null) {
+            throw new IllegalArgumentException("Fruit repository must not be NULL");
+        }
+    }
+
+    private static Supplier buildSupplierFromDto(SupplierRequestDto request) {
         return new Supplier(
                 request.name(),
                 request.country());
     }
 
-    SupplierResponseDto buildDtoFromSupplier(Supplier supplier) {
+    private static SupplierResponseDto buildDtoFromSupplier(Supplier supplier) {
         return new SupplierResponseDto(
                 supplier.getId(),
                 supplier.getName(),
