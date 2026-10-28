@@ -236,7 +236,7 @@ class FruitControllerTest {
     }
 
     @Test
-    @DisplayName("GET /fruits/{id} with non-existing ID should return HTTP 404 NOT FOUND with explanation errorMessage")
+    @DisplayName("GET /fruits/{id} request with non-existing ID should return HTTP 404 NOT FOUND with explanation Error Message")
     void getFruitById_withNonExistingIdShouldReturnExpectedStatusWithExplanation() throws Exception {
 
         Long nonExistingId = 38L;
@@ -246,6 +246,22 @@ class FruitControllerTest {
                 .thenThrow(new FruitNotFoundException(message));
 
         mockMvc.perform(get("/fruits/{id}", nonExistingId))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorMessage").value(message));
+    }
+
+    @Test
+    @DisplayName("GET /fruits?supplier_id={id} with non-existing ID should return HTTP 04 NOT FOUND with explanation")
+    void listFruitsBySupplier_shouldReturnExpectedHttpResponseWithMessage() throws Exception {
+
+        Long nonExistingId = 38L;
+        String message = String.format("Supplier with ID %d not found", nonExistingId);
+
+        when(fruitService.getFruitsBySupplier(38L))
+                .thenThrow(new SupplierNotFoundException(message));
+
+        mockMvc.perform(get("/fruits?supplier_id={id}", nonExistingId))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorMessage").value(message));

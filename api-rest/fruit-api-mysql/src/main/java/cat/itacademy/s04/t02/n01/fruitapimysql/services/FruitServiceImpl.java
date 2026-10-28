@@ -87,12 +87,17 @@ public class FruitServiceImpl implements FruitService {
     @Transactional
     public List<FruitResponseDto> getFruitsBySupplier(Long id) {
 
+        if(!supplierRepository.existsById(id)) {
+            throw new SupplierNotFoundException(String.format("Supplier with ID %d not found", id));
+        }
+
         List<Fruit> fruitsBySupplier = this
                 .fruitRepository
                 .findAll()
                 .stream()
                 .filter(fruit -> id.equals(fruit.getSupplier().getId()))
                 .toList();
+
 
         return fruitsBySupplier
                 .stream()
