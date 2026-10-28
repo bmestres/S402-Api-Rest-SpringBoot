@@ -85,12 +85,22 @@ class SupplierServiceImplTest {
 
     }
 
-    @Test
-    void getAllSuppliers() {
-    }
 
     @Test
-    void findSupplierById() {
+    @DisplayName("Find Supplier By ID should return expected DTO if ID exists")
+    void findSupplierById_shouldReturnExpectedDtoIfIdExists() {
+
+        Supplier existingSupplier = new Supplier("Name", "Country");
+
+        existingSupplier.setId(1L);
+
+        when(supplierRepository.findById(1L)).thenReturn(Optional.of(existingSupplier));
+
+        SupplierResponseDto result = supplierService.findSupplierById(1L);
+
+        assertEquals(1L, result.id());
+        assertEquals("Name", result.name());
+        assertEquals("Country", result.country());
     }
 
     @Test

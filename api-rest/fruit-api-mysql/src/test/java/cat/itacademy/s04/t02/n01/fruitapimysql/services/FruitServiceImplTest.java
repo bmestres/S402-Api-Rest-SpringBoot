@@ -137,18 +137,13 @@ class FruitServiceImplTest {
     void getFruitsById_ShouldReturnExpectedDto() {
 
         Supplier supplier1 = new Supplier("Name1", "Country1");
-        Supplier supplier2 = new Supplier("Name2", "Country2");
-
         supplier1.setId(1L);
-        supplier2.setId(2L);
 
         Fruit fruit1 = new Fruit("Peer", 2, supplier1);
-        Fruit fruit2 = new Fruit("Watermelon", 5, supplier2);
-
         fruit1.setId(1L);
-        fruit2.setId(2L);
 
-        when(this.fruitRepository.findAll()).thenReturn(List.of(fruit1, fruit2));
+        when(this.supplierRepository.existsById(1L)).thenReturn(true);
+        when(this.fruitRepository.findBySupplierId(1L)).thenReturn(List.of(fruit1));
 
         List<FruitResponseDto> filteredFruits = this.fruitService.getFruitsBySupplier(1L);
 
