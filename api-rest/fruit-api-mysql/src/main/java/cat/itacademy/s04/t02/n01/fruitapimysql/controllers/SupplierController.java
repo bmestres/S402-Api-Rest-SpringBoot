@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/suppliers")
 public class SupplierController {
 
-    private SupplierService supplierService;
+    private final SupplierService supplierService;
 
     public SupplierController(SupplierService supplierService) {
         this.supplierService = supplierService;
@@ -38,6 +38,7 @@ public class SupplierController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<SupplierResponseDto> deleteSupplier(@PathVariable Long id) {
+        this.supplierService.deleteSupplierById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
