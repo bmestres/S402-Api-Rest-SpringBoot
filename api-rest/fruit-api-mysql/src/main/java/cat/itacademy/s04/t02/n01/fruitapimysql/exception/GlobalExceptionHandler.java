@@ -23,4 +23,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleExistingSupplierNameCase(RepeatedSupplierNameException exception) {
         return new ResponseEntity<>(new ErrorResponse(exception.getMessage()), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(SupplierWithFruitsAssociatedException.class)
+    public ResponseEntity<ErrorResponse> handleSupplierWithAssociatedFruitsCase(SupplierWithFruitsAssociatedException exception) {
+        return new ResponseEntity<>(new ErrorResponse(exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 }

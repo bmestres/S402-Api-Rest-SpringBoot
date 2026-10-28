@@ -5,6 +5,8 @@ import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Supplier;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.exception.SupplierNotFoundException;
+import cat.itacademy.s04.t02.n01.fruitapimysql.exception.SupplierWithFruitsAssociatedException;
+import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.FruitRepository;
 import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.SupplierRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,6 +27,9 @@ class SupplierServiceImplTest {
 
     @Mock
     private SupplierRepository supplierRepository;
+
+    @Mock
+    private FruitRepository fruitRepository;
 
     @InjectMocks
     private SupplierServiceImpl supplierService;
@@ -45,7 +51,6 @@ class SupplierServiceImplTest {
         assertEquals(1L, responseSupplier.id());
         assertEquals("Name", responseSupplier.name());
         assertEquals("Country", responseSupplier.country());
-
     }
 
     @Test
@@ -89,6 +94,46 @@ class SupplierServiceImplTest {
     }
 
     @Test
-    void deleteSupplierById() {
+    @DisplayName("Delete Supplier By Id call Repository delete if supplier it exists and does not have fruits associated")
+    void deleteSupplierByIdShouldEliminateIfSupplierExistsAndDoesNotHaveFruitsAssociated() {
+
+        Long existingSupplierId = 1L;
+        Supplier existingSupplier = new Supplier("Name","Country");
+        existingSupplier.setId(existingSupplierId);
+
+        when(this.supplierRepository.existsById(existingSupplier.getId())).thenReturn(true);
+        when(this.fruitRepository.existsBySupplierId(existingSupplier.getId())).thenReturn(false);
+
+        this.supplierService.deleteSupplierById(existingSupplierId);
+
+        verify(supplierRepository).deleteById(existingSupplierId);
+    }
+
+    @Test
+    @DisplayName("Delete Supplier with non-existing ID should return Supplier Not Found Exception")
+    void deleteSupplierByIdShouldReturnExpectedExceptionIfIdDoesNotExist() {
+
+        Long nonExistingSupplierId = 14L;
+
+        Supplier nonExistingSupplier = new Supplier("Cobas Fruit", "Finland");
+        nonExistingSupplier.setId(nonExistingSupplierId);
+
+        when(this.supplierRepository.existsById(nonExistingSupplier.getId())).thenReturn(false);
+
+        assertThrows(SupplierNotFoundException.class, ()-> this.supplierService.deleteSupplierById(nonExistingSupplierId));
+    }
+
+    @Test
+    @DisplayName("Delete Supplier with fruits associated should return Supplier With Fruits Associated Exception")
+    void deleteSupplierByIdShouldReturnExpectedExceptionIfSupplierHasFruitsAssociated() {
+
+        Supplier testSupplier = new Supplier("Green Fruits", "Sweden");
+        Long existingSupplierId = 1L;
+        testSupplier.setId(existingSupplierId);
+
+        when(this.supplierRepository.existsById(testSupplier.getId())).thenReturn(true);
+        when(this.fruitRepository.existsBySupplierId(testSupplier.getId())).thenReturn(true);
+
+        assertThrows(SupplierWithFruitsAssociatedException.class, ()-> this.supplierService.deleteSupplierById(existingSupplierId));
     }
 }

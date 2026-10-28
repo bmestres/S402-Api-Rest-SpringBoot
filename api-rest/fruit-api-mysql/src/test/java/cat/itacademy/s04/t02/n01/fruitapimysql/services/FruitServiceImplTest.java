@@ -191,7 +191,7 @@ class FruitServiceImplTest {
     }
 
     @Test
-    @DisplayName("Delete fruit should call expected repository methods if ID exists")
+    @DisplayName("Delete fruit should eliminate fruit if ID exists")
     void deleteFruitById_shouldCallExpectedRepositoryMethodsIfIdExists() {
 
         Supplier supplier = new Supplier("Name","Country");
@@ -199,9 +199,7 @@ class FruitServiceImplTest {
         Fruit existingFruit = new Fruit("Prune", 1, supplier);
         existingFruit.setId(1L);
 
-        when(fruitRepository
-                .findById(1L))
-                .thenReturn(Optional.of(existingFruit));
+        when(fruitRepository.findById(1L)).thenReturn(Optional.of(existingFruit));
 
         fruitService.deleteFruitById(1L);
 

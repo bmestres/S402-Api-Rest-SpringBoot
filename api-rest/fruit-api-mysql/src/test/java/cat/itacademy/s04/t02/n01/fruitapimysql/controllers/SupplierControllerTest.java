@@ -18,12 +18,10 @@ import tools.jackson.databind.ObjectMapper;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import static org.mockito.Mockito.when;
 
+import static org.mockito.Mockito.*;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -92,5 +90,17 @@ class SupplierControllerTest {
 
         mockMvc.perform(put("/suppliers/{id}", nonExistingId).contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("DELETE /suppliers/{id} request with existing ID and no fruits associated should return HTTP 204 NO CONTENT")
+    void deleteSupplierById_withExistingSupplierAndNoFruitsAssociatedShouldReturnExpectedHttpResponse() throws Exception {
+
+        Long existingId = 1L;
+
+        doNothing().when(supplierService).deleteSupplierById(existingId);
+
+        mockMvc.perform(delete("/suppliers/{id}", existingId))
+                .andExpect(status().isNoContent());
     }
 }

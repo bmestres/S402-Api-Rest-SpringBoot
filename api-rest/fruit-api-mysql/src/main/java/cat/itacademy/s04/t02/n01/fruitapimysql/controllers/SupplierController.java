@@ -19,12 +19,17 @@ public class SupplierController {
     }
 
     @PostMapping
-    ResponseEntity<SupplierResponseDto> registerSupplier(@Valid @RequestBody SupplierRequestDto supplierRequest) {
+    public ResponseEntity<SupplierResponseDto> registerSupplier(@Valid @RequestBody SupplierRequestDto supplierRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.supplierService.registerSupplier(supplierRequest));
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<SupplierResponseDto> updateSupplier(@PathVariable Long id, @Valid @RequestBody SupplierRequestDto supplierRequest) {
+    public ResponseEntity<SupplierResponseDto> updateSupplier(@PathVariable Long id, @Valid @RequestBody SupplierRequestDto supplierRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(this.supplierService.updateSupplier(id, supplierRequest));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<SupplierResponseDto> deleteSupplier(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
