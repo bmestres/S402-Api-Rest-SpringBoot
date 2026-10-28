@@ -4,7 +4,9 @@ import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Supplier;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.exception.FruitNotFoundException;
+import cat.itacademy.s04.t02.n01.fruitapimysql.exception.SupplierNotFoundException;
 import cat.itacademy.s04.t02.n01.fruitapimysql.services.FruitServiceImpl;
+import cat.itacademy.s04.t02.n01.fruitapimysql.services.SupplierServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,8 @@ class FruitControllerTest {
     @MockitoBean
     private FruitServiceImpl fruitService;
 
+    private SupplierServiceImpl supplierService;
+
     @Test
     @DisplayName("POST /fruits request should return HTTP 201 Created and details of the fruit")
     void createFruit_shouldReturnExpectedHttpResponseWithDetails() throws Exception {
@@ -66,7 +70,26 @@ class FruitControllerTest {
     }
 
     @Test
-    @DisplayName("POST/ fruits request should return HTTP 400 Bad request if the name is empty or the weight is not valid")
+    @DisplayName("POST/ fruits request with non-existing supplier should return HTTP 404 NOT FOUND")
+    void createFruit_shouldReturnExpectedHttpResponseWhenSupplierIsNotFound() throws Exception {
+
+        Long nonExistingSupplierId = 41L;
+        String message = String.format("Supplier with ID %d not found", nonExistingSupplierId);
+
+        FruitRequestDto testRequest = new FruitRequestDto("Melon", 6, nonExistingSupplierId);
+        String jsonPayload = objectMapper.writeValueAsString(testRequest);
+
+        when(fruitService.createFruit(any(FruitRequestDto.class)))
+                .thenThrow(new SupplierNotFoundException(message));
+
+        mockMvc.perform(post("/fruits").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorMessage").value(message));
+    }
+
+    @Test
+    @DisplayName("POST/ fruits request should return HTTP 400 BAD REQUEST if the name is empty or the weight is not valid")
     void createFruit_shouldReturnExpectedHttpResponseWhenParametersAreNotValid() throws Exception {
 
         Supplier supplier1 = new Supplier("Name1", "Country");

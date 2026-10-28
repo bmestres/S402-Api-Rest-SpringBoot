@@ -3,7 +3,7 @@ package cat.itacademy.s04.t02.n01.fruitapimysql.services;
 import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Supplier;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.SupplierResponseDto;
-import cat.itacademy.s04.t02.n01.fruitapimysql.exception.ExistingSupplierNameException;
+import cat.itacademy.s04.t02.n01.fruitapimysql.exception.RepeatedSupplierNameException;
 import cat.itacademy.s04.t02.n01.fruitapimysql.exception.SupplierNotFoundException;
 import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.SupplierRepository;
 import jakarta.transaction.Transactional;
@@ -32,7 +32,7 @@ public class SupplierServiceImpl implements SupplierService {
         Supplier supplier = buildSupplierFromDto(supplierRequest);
 
         if(this.supplierRepository.existsByName(supplier.getName())) {
-            throw new ExistingSupplierNameException(String.format("Supplier %s already exists", supplier.getName()));
+            throw new RepeatedSupplierNameException(String.format("Supplier %s already exists", supplier.getName()));
         }
 
         return buildDtoFromSupplier(this.supplierRepository.save(supplier));

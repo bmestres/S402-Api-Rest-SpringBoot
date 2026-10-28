@@ -19,8 +19,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse(exception.getMessage()), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ExistingSupplierNameException.class)
-    public ResponseEntity<ErrorResponse> handleExistingSupplierNameCase(ExistingSupplierNameException exception) {
+    @ExceptionHandler(RepeatedSupplierNameException.class)
+    public ResponseEntity<ErrorResponse> handleExistingSupplierNameCase(RepeatedSupplierNameException exception) {
         return new ResponseEntity<>(new ErrorResponse(exception.getMessage()), HttpStatus.CONFLICT);
     }
 }
