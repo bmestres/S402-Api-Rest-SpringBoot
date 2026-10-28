@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -80,6 +81,28 @@ public class FruitServiceImpl implements FruitService {
         return fruits.stream()
                         .map(fruit -> buildDtoFromFruit(fruit))
                         .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public List<FruitResponseDto> getFruitsBySupplier(Long id) {
+
+        if(!supplierRepository.existsById(id)) {
+            throw new SupplierNotFoundException(String.format("Supplier with ID %d not found", id));
+        }
+
+        List<Fruit> fruitsBySupplier = this
+                .fruitRepository
+                .findAll()
+                .stream()
+                .filter(fruit -> id.equals(fruit.getSupplier().getId()))
+                .toList();
+
+
+        return fruitsBySupplier
+                .stream()
+                .map(fruit -> buildDtoFromFruit(fruit))
+                .collect(Collectors.toList());
     }
 
     @Override
