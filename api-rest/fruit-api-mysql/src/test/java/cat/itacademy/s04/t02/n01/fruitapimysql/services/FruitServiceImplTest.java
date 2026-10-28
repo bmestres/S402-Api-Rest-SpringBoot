@@ -5,6 +5,7 @@ import cat.itacademy.s04.t02.n01.fruitapimysql.domain.Supplier;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitRequestDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.dto.FruitResponseDto;
 import cat.itacademy.s04.t02.n01.fruitapimysql.exception.FruitNotFoundException;
+import cat.itacademy.s04.t02.n01.fruitapimysql.exception.SupplierNotFoundException;
 import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.FruitRepository;
 import cat.itacademy.s04.t02.n01.fruitapimysql.repositories.SupplierRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +20,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FruitServiceImplTest {
@@ -58,6 +58,19 @@ class FruitServiceImplTest {
         assertEquals(1L, result.id());
         assertEquals("Orange", result.name());
         assertEquals(3, result.weightInKilos());
+    }
+
+    @Test
+    @DisplayName("Create fruit with non-existent Supplier should return Supplier Not Found Exception")
+    void createFruit_withNonExistentSupplierShouldReturnExpectedException() {
+
+        Long nonExistentSupplierId = 78L;
+
+        FruitRequestDto testRequest = new FruitRequestDto("Banana", 1, nonExistentSupplierId);
+
+        when(supplierRepository.existsById(nonExistentSupplierId)).thenReturn(false);
+
+        assertThrows(SupplierNotFoundException.class, ()-> fruitService.createFruit(testRequest));
     }
 
     @Test
